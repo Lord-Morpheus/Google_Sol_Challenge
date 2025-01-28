@@ -17,6 +17,12 @@ const handleGetUserById = async (req, res) => {
   res.status(response.status).json(response);
 }
 
+const handleGetUserByEmail = async (req, res) => {
+  const email=req.email;
+  const response= await getUserByEmail(email);
+  res.status(response.status).json(response);
+}
+
 const handleUpdateUser = async (req, res) => {
   const data=req.body;
   const response= await updateUser(data);
@@ -29,4 +35,4 @@ const hangleDeleteUser = async (req, res) => {
   res.status(response.status).json(response);
 }
 
-module.exports = {handleCreateUser, handleGetAllUsers, handleGetUserById, handleUpdateUser, hangleDeleteUser};
+module.exports = {handleCreateUser, handleGetAllUsers, handleGetUserById, handleUpdateUser, hangleDeleteUser, handleGetUserByEmail};
