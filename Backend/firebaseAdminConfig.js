@@ -3,11 +3,14 @@ const serviceAccount=require('./credentials.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
+  storageBucket: "gs://libbook-e9202.firebasestorage.app"
 });
 
 const db=admin.firestore();
 const auth=admin.auth();
+const store=admin.storage();
 
 const Users=db.collection('Users');
+const Resources=db.collection('Resources');
 
-module.exports={Users,auth};
+module.exports={Users,auth,Resources,store,db};
