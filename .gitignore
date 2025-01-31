@@ -1,0 +1,7 @@
+/Backend/node_modules
+/Backend/credentials.json
+
+/Frontend/firebaseConfig.js
+/Frontend/node_modules
+/Frontend/.gitignore
+

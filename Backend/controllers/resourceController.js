@@ -1,5 +1,5 @@
 const {store,Resources}= require('../firebaseAdminConfig');
-const {addResource,getAllResources,getResourceById, updateResource,deleteResource}=require('../models/resourceModel');
+const {addResource,getAllResources,getResourceById, updateResource, updateResourceRating, deleteResource}=require('../models/resourceModel');
 const multer=require('multer');
 const storage=multer.memoryStorage();
 const upload = multer({storage: storage});
@@ -28,8 +28,11 @@ const handleAddResource = async (req, res) => {
           expires: '03-17-2025'
         });
 
+        const {userRating,numUserRated,...rest}=req.body;
         const data = {
-          name: req.body.name,
+          userRating: Number(userRating),
+          numUserRated: Number(numUserRated),
+          ...rest,
           fileUrl: url[0],
           createdAt: new Date().toISOString(),
         };
@@ -112,6 +115,17 @@ const handleUpdateResource = async (req, res) => {
   }
 }
 
+const handleUpdateResourceRating = async (req, res) => {
+  try{
+    const id=req.body.id;
+    const rating=req.body.userRating;
+    const response=await updateResourceRating(id,rating);
+    res.status(response.status).json(response);
+  } catch (error){
+    res.status(400).json({ msg: 'Failed to update resource rating', details: error.message });
+  }
+}
+
 const handleDeleteResource = async (req, res) => {
   const id = req.params.id;
   try {
@@ -139,4 +153,4 @@ const handleDeleteResource = async (req, res) => {
   }
 };
 
-module.exports={handleAddResource, handleGetAllResources,handleGetResourceById,handleUpdateResource,handleDeleteResource};
+module.exports={handleAddResource, handleGetAllResources,handleGetResourceById,handleUpdateResource,handleUpdateResourceRating,handleDeleteResource};

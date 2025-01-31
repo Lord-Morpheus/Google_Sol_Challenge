@@ -47,6 +47,27 @@ const updateResource=async(data)=>{
   }
 }
 
+const updateResourceRating=async(id,rating)=>{
+  try{
+    const docRef=Resources.doc(id);
+    const docSnap=await docRef.get();
+    if(!docSnap.exists){
+      return {msg: 'Resource not found', status: 404};
+    }
+    const oldRating=docSnap.data().userRating;
+    const userRated=docSnap.data().numUserRated;
+    const newRating=(Number(oldRating)*Number(userRated)+Number(rating))/(Number(userRated)+1);
+    
+    const data=docSnap.data();
+    data.userRating=Number(newRating);
+    data.numUserRated=Number(userRated+1);
+    await docRef.update(data);
+    return {msg: 'Resource Rating Updated', status: 200};
+  } catch (error){
+    return {msg: 'Failed to update resource rating', details: error.message, status: 400};
+  }
+}
+
 const deleteResource=async(id)=>{
   try{
     const docRef=Resources.doc(id);
@@ -57,4 +78,4 @@ const deleteResource=async(id)=>{
   }
 }
 
-module.exports={addResource, getAllResources, getResourceById, updateResource, deleteResource};
+module.exports={addResource, getAllResources, getResourceById, updateResource,updateResourceRating, deleteResource};

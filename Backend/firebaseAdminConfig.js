@@ -12,5 +12,6 @@ const store=admin.storage();
 
 const Users=db.collection('Users');
 const Resources=db.collection('Resources');
+const Feedback=db.collection('Feedback');
 
-module.exports={Users,auth,Resources,store,db};
+module.exports={Users,auth,Resources,store,db,Feedback};
