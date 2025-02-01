@@ -1,4 +1,4 @@
-const {Feedback,Resources} =require('../firebaseAdminConfig');
+const {Feedback} =require('../firebaseAdminConfig');
 
 const addRequestForBooks=async(data)=>{
   try{
@@ -19,4 +19,15 @@ const deleteRequestForBooks=async(id)=>{
   }
 }
 
-module.exports={addRequestForBooks,deleteRequestForBooks};
+const addReview=async(data)=>{
+  try{
+
+    const doc=await Feedback.add(data);
+    return {msg: 'Review Added', docId: doc.id, status: 201};
+  }catch(error){
+    return {msg: 'Failed to add review', details: error.message, status: 400};
+  }
+}
+
+
+module.exports={addRequestForBooks,deleteRequestForBooks,addReview};
