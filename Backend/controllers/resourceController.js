@@ -28,10 +28,12 @@ const handleAddResource = async (req, res) => {
           expires: '03-17-2025'
         });
 
-        const {userRating,numUserRated,...rest}=req.body;
+        const {userRating,numUserRated,genre,...rest}=req.body;
+        const genreArray=genre.split(',').map((item)=>item.trim());
         const data = {
-          userRating: Number(userRating),
-          numUserRated: Number(numUserRated),
+          userRating: isNaN(Number(userRating))?0:Number(userRating),
+          numUserRated: isNaN(Number(numUserRated))?0:Number(numUserRated),
+          genre: genreArray,
           ...rest,
           fileUrl: url[0],
           createdAt: new Date().toISOString(),

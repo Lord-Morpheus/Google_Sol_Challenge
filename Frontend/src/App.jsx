@@ -1,7 +1,10 @@
-import React, { useState } from "react";
-import BookList from "./components/BookList";
-import AddBook from "./components/AddBook";
-import Header from "./components/Header";
+import { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from "react-router-dom";
+import Homepage from '../src/pages/homePage.jsx';
 
 function App() {
   const [books, setBooks] = useState([
@@ -13,11 +16,13 @@ function App() {
   };
 
   return (
-    <div>
-      <Header />
-      <AddBook addBook={addBook} />
-      <BookList books={books} />
-    </div>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+        </Routes>  
+      </Router>  
+    </>
   );
 }
 
