@@ -5,6 +5,8 @@ import {
   Route
 } from "react-router-dom";
 import Homepage from '../src/pages/homePage.jsx';
+import Header from '../src/components/header.jsx';
+import Pagehome2 from "./pages/Pagehome2.jsx";
 
 function App() {
   const [books, setBooks] = useState([
@@ -17,6 +19,7 @@ function App() {
 
   return (
     <>
+      {/* <Header /> */}
       <Router>
         <Routes>
           <Route path="/" element={<Homepage />} />
