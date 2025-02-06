@@ -23,14 +23,14 @@ const Pagehome2 = () => {
       <div className="h-auto w-full flex flex-col items-center text-center p-10">
         <div className="w-full h-auto flex justify-center">
           <p className="text-green-700 font-bold md:text-6xl text-3xl">
-            "Top Books"
+          &quot;Top Books&quot;
           </p>
         </div>
         <div className="w-30 md:w-60 h-1 border-b-4 border-b-blue-900 md:mt-4 mt-2 rounded-2xl"></div>
 
         <div className="w-full flex flex-wrap justify-evenly">
           {urls.map((url, index) => (
-            <div className=" w-70 flex flex-col items-center mb-12 mt-12">
+            <div key={index} className=" w-70 flex flex-col items-center mb-12 mt-12">
               <img className="w-60 h-75 hover:opacity-70" src={url} alt="" />
             </div>
           ))}
@@ -40,14 +40,14 @@ const Pagehome2 = () => {
       <div className="h-auto w-full flex flex-col items-center text-center p-10">
         <div className="w-full h-auto flex justify-center">
           <p className="text-green-700 font-bold md:text-6xl text-3xl">
-            "Newly Released Books"
+          &quot;Newly Released Books&quot;
           </p>
         </div>
         <div className="w-60 md:w-140 h-1 border-b-4 border-b-blue-900 md:mt-4 mt-2 rounded-2xl"></div>
 
         <div className="w-full flex flex-wrap justify-evenly">
           {urls.map((url, index) => (
-            <div className=" w-70 flex flex-col items-center mb-12 mt-12">
+            <div key={index} className=" w-70 flex flex-col items-center mb-12 mt-12">
               <img className="w-60 h-75 hover:opacity-70" src={url} alt="" />
             </div>
           ))}

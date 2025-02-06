@@ -96,10 +96,10 @@ const Sidebar = () => {
   return (
     <div
       className={`flex flex-col items-center h-lvh transition-all duration-300 ease-in-out ${
-        isOpen ? 'w-64' : 'w-27' // Sidebar width changes based on isOpen
-      }`} 
+        isOpen ? 'grid-cols-2' : 'grid-cols-1'
+      } border border-r-2 border-[#e7e3e4] sticky top-0`} 
     >
-      <div className="flex items-center justify-between p-2 w-full">
+      <div className="flex items-center justify-between pl-2 py-2 w-full mt-3">
         <div className={`flex items-center ${isOpen?'gap-2':'gap-3'}`}>
           <img src={icon} alt="logo" className="h-10 object-fill" />
           <h4 className={`capitalize font-semibold ${isOpen ? "" : "hidden"}`}>
@@ -109,9 +109,9 @@ const Sidebar = () => {
         <img
           src={sidebar}
           alt="sidebar"
-          className={`h-10 object-fill transform translate-transform ${
+          className={`h-8 object-fill transform translate-transform ${
             isOpen ? "rotate-0" : "rotate-180"
-          } duration-500`}
+          } duration-500 hover:cursor-pointer`}
           onClick={handleToggleSidebar}
         />
       </div>
@@ -139,7 +139,7 @@ const Sidebar = () => {
           name="search"
           id="search"
           placeholder="Search..."
-          className="w-[90%] outline-none font-semibold"
+          className="w-[95%] outline-none font-semibold"
           onClick={handleToggleSearchbar}
         />
         <div

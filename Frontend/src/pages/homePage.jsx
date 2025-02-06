@@ -12,8 +12,9 @@ const homePage = () => {
         isOpen ? 'grid-cols-6' : 'grid-cols-14'
       } bg-[#f6f4f5] transition-all duration-500 ease-in-out`}  // Adjusted transition duration
     >
-      <Sidebar className="col-span-1"/>
-      <h2 className={`my-3 bg-white rounded-s col-span-${isOpen ? 5 : 13} w-full`}>Home</h2>
+      <Sidebar/>
+      <div className={`m-2 bg-white rounded-md ${isOpen?'col-span-5':'col-span-13'}`}>
+      </div>
     </div>
   );
 };

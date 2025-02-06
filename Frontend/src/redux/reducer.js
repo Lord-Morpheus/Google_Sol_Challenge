@@ -3,7 +3,7 @@ import { TOGGLE_SIDEBAR } from './actions';
 import { TOGGLE_SEARCHBAR } from './actions';
 
 const initialState = {
-  isOpen: false,
+  isOpen: true,
   // isSearchOpen: false,
 };
 
