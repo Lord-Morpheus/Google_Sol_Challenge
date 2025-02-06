@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import icon from "../assets/icon.svg";
 import sidebar from "../assets/sidebar.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar, toggleSearchbar } from "../redux/actions";
 
 const Sidebar = () => {
   // const [resources, setResources] = useState([]);
@@ -11,6 +13,17 @@ const Sidebar = () => {
   const [ages, setAges] = useState([]);
   const [publishedIns, setPublishedIns] = useState([]);
   const [isHidden, setIsHidden] = useState(null);
+
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state) => state.sidebar.isOpen);
+
+  const handleToggleSidebar = () => {
+    dispatch(toggleSidebar());
+  };
+
+  const handleToggleSearchbar = () => {
+    dispatch(toggleSearchbar());
+  };
 
   function processField(field) {
     if (Array.isArray(field)) {
@@ -81,15 +94,32 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="col-span-2 flex flex-col items-center w-full h-lvh ">
+    <div
+      className={`flex flex-col items-center h-lvh transition-all duration-300 ease-in-out ${
+        isOpen ? 'w-64' : 'w-27' // Sidebar width changes based on isOpen
+      }`} 
+    >
       <div className="flex items-center justify-between p-2 w-full">
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center ${isOpen?'gap-2':'gap-3'}`}>
           <img src={icon} alt="logo" className="h-10 object-fill" />
-          <h4 className="capitalize font-semibold">libooks</h4>
+          <h4 className={`capitalize font-semibold ${isOpen ? "" : "hidden"}`}>
+            libooks
+          </h4>
         </div>
-        <img src={sidebar} alt="sidebar" className="h-10 object-fill" />
+        <img
+          src={sidebar}
+          alt="sidebar"
+          className={`h-10 object-fill transform translate-transform ${
+            isOpen ? "rotate-0" : "rotate-180"
+          } duration-500`}
+          onClick={handleToggleSidebar}
+        />
       </div>
-      <div className="flex items-center justify-start gap-1 border border-[#e7e3e4] rounded-lg w-[95%] p-1 mb-4 mt-1">
+      <div
+        className={`flex items-center ${
+          isOpen ? "justify-start" : "justify-center"
+        } gap-1 border border-[#e7e3e4] rounded-lg w-[95%] p-1 mb-4 mt-1`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -110,17 +140,26 @@ const Sidebar = () => {
           id="search"
           placeholder="Search..."
           className="w-[90%] outline-none font-semibold"
+          onClick={handleToggleSearchbar}
         />
-        <div className="bg-white rounded-lg p-1 text-[#757273] shadow-sm font-semibold">
+        <div
+          className={`bg-white rounded-lg p-1 text-[#757273] shadow-sm font-semibold ${
+            isOpen ? "" : "hidden"
+          }`}
+        >
           Ctrl+K
         </div>
       </div>
-      <div className="flex items-center justify-start gap-2 w-[95%] p-1 mt-2 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600">
+      <div
+        className={`flex items-center ${
+          isOpen ? "justify-start" : "justify-center"
+        } gap-2 w-[95%] p-1 mt-2 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="size-5"
+          className={`${isOpen ? "size-5" : "size-8"}`}
         >
           <path
             fillRule="evenodd"
@@ -128,14 +167,18 @@ const Sidebar = () => {
             clipRule="evenodd"
           />
         </svg>
-        <h4>Home</h4>
+        <h4 className={`${isOpen ? "" : "hidden"}`}>Home</h4>
       </div>
-      <div className="flex items-center justify-start gap-2 w-[95%] p-1 mt-1 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600">
+      <div
+        className={`flex items-center ${
+          isOpen ? "justify-start" : "justify-center "
+        } gap-2 w-[95%] p-1 mt-1 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="size-5"
+          className={`${isOpen ? "size-5" : "size-8"}`}
         >
           <path
             fillRule="evenodd"
@@ -143,14 +186,18 @@ const Sidebar = () => {
             clipRule="evenodd"
           />
         </svg>
-        <h4>Collection</h4>
+        <h4 className={`${isOpen ? "" : "hidden"}`}>Collection</h4>
       </div>
-      <div className="flex items-center justify-start gap-2 w-[95%] p-1 mt-5 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600">
+      <div
+        className={`flex items-center ${
+          isOpen ? "justify-start" : "justify-center"
+        } gap-2 w-[95%] p-1 mt-5 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="size-5"
+          className={`${isOpen ? "size-5" : "size-8"}`}
         >
           <path
             fillRule="evenodd"
@@ -158,9 +205,9 @@ const Sidebar = () => {
             clipRule="evenodd"
           />
         </svg>
-        <h4>Filters</h4>
+        <h4 className={`${isOpen ? "" : "hidden"}`}>Filters</h4>
       </div>
-      <div className="flex w-[86%]">
+      <div className={`flex w-[86%] ${isOpen ? "" : "hidden"}`}>
         {/* <img src={line} alt="line" className="w-[10%] h-full object-stretch" /> */}
         <div className="mt-1 flex flex-col gap-2 w-full border-l-3 border-[#757273]">
           <button
