@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Homepage from "./pages/homePage.jsx";
 import Sidebar from "./components/sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
+import Login from "./pages/Login.jsx";
 
 function App() {
   const isOpen = useSelector((state) => state.sidebar.isOpen);
@@ -24,6 +25,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Homepage />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Router>
       </div>
