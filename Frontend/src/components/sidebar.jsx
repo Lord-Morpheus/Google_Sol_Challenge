@@ -95,16 +95,13 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`flex flex-col items-center h-lvh transition-all duration-300 ease-in-out ${
+      className={`flex flex-col items-center transition-all duration-300 ease-in-out ${
         isOpen ? 'grid-cols-2' : 'grid-cols-1'
-      } border border-r-2 border-[#e7e3e4] sticky top-0`} 
+      } border-r-2 border-[#e7e3e4] sticky top-0 h-[95%]`} 
     >
-      <div className="flex items-center justify-between pl-2 py-2 w-full mt-3">
+      <div className="flex items-center justify-between pl-2 w-full">
         <div className={`flex items-center ${isOpen?'gap-2':'gap-3'}`}>
           <img src={icon} alt="logo" className="h-10 object-fill" />
-          <h4 className={`capitalize font-semibold ${isOpen ? "" : "hidden"}`}>
-            libooks
-          </h4>
         </div>
         <img
           src={sidebar}

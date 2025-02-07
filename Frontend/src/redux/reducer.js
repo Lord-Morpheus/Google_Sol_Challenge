@@ -1,10 +1,11 @@
 // src/redux/reducer.js
-import { TOGGLE_SIDEBAR } from './actions';
-import { TOGGLE_SEARCHBAR } from './actions';
+import { TOGGLE_SIDEBAR } from "./actions";
+import { TOGGLE_SEARCHBAR } from "./actions";
+import { TOGGLE_MODE } from "./actions";
 
 const initialState = {
   isOpen: true,
-  // isSearchOpen: false,
+  isDay: true,
 };
 
 const sidebarReducer = (state = initialState, action) => {
@@ -14,11 +15,16 @@ const sidebarReducer = (state = initialState, action) => {
         ...state,
         isOpen: !state.isOpen,
       };
-      case TOGGLE_SEARCHBAR:
-        return {
-          ...state,
-          isOpen: true,
-        };
+    case TOGGLE_SEARCHBAR:
+      return {
+        ...state,
+        isOpen: true,
+      };
+    case TOGGLE_MODE:
+      return {
+        ...state,
+        isDay: !state.isDay,
+      };
     default:
       return state;
   }

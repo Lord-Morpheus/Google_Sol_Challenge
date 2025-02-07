@@ -1,31 +1,33 @@
 import { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
-import Homepage from '../src/pages/homePage.jsx';
-import Header from '../src/components/header.jsx';
-import Pagehome2 from "./pages/Pagehome2.jsx";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Homepage from "./pages/homePage.jsx";
+import Sidebar from "./components/sidebar.jsx";
+import Navbar from "./components/Navbar.jsx";
 
 function App() {
-  const [books, setBooks] = useState([
-    { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald", year: 1925 },
-  ]);
-
-  const addBook = (book) => {
-    setBooks([...books, book]);
-  };
+  const isOpen = useSelector((state) => state.sidebar.isOpen);
 
   return (
-    <>
-      {/* <Header /> */}
-      <Router>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-        </Routes>  
-      </Router>  
-    </>
+    <div
+      className={`grid h-lvh items-center ${
+        isOpen ? "grid-cols-6" : "grid-cols-14"
+      } bg-[#FDFBF7] transition-all duration-500 ease-in-out`} // Adjusted transition duration
+    >
+      <Sidebar />
+      <div
+        className={`min-h-lvh rounded-md ${
+          isOpen ? "col-span-5" : "col-span-13"
+        }`}
+      >
+        <Navbar />
+        <Router>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+          </Routes>
+        </Router>
+      </div>
+    </div>
   );
 }
 

@@ -1,22 +1,27 @@
-import Sidebar from '../components/sidebar.jsx';
-import { useSelector } from 'react-redux';
-// import { toggleSidebar } from '../redux/actions';
+import { useEffect } from "react";
 
-const homePage = () => {
-  // const dispatch = useDispatch();
-  const isOpen = useSelector((state) => state.sidebar.isOpen);
-
+const HomePage = () => {
   return (
-    <div
-      className={`grid ${
-        isOpen ? 'grid-cols-6' : 'grid-cols-14'
-      } bg-[#f6f4f5] transition-all duration-500 ease-in-out`}  // Adjusted transition duration
-    >
-      <Sidebar/>
-      <div className={`m-2 bg-white rounded-md ${isOpen?'col-span-5':'col-span-13'}`}>
+    <div className="rounded-md bg-white flex w-full h-full">
+      <div className="flex justify-start gap-4 items-center w-3/4 p-4">
+        <div className="rounded-3xl bg-[#CEE4F3] px-5 py-1 text-center">
+          Popular
+        </div>
+        <div className="rounded-3xl bg-[#CEE4F3] px-5 py-1 text-center">
+          Latest
+        </div>
+        <div className="rounded-3xl bg-[#CEE4F3] px-5 py-1 text-center">
+          Top Rated
+        </div>
+        <div className="rounded-3xl bg-[#CEE4F3] px-5 py-1 text-center">
+          Following
+        </div>
+      </div>
+      <div className="w-1/4">
+        
       </div>
     </div>
   );
 };
 
-export default homePage;
+export default HomePage;
