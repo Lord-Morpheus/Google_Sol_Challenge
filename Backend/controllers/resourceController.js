@@ -8,20 +8,36 @@ const upload = multer({storage: storage});
 const handleAddResource = async (req, res) => {
   try {
     // Handle file upload with multer
-    upload.single('document')(req, res, async (err) => {
+    upload.array('files',2)(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ msg: 'Failed to upload file1', details: err.message });
       }
 
-      const file = req.file;
-      if (file) {
+      const files = req.files;
+      const docFile=files.find((file)=>file.mimetype.includes('pdf'));
+      const imageFile=files.find((file)=>file.mimetype.includes('jpg')||file.mimetype.includes('jpeg')||file.mimetype.includes('png'));
+      if (docFile) {
         const bucket = store.bucket();
-        const fileUpload = bucket.file(file.originalname);
+        const fileUpload = bucket.file(`document/${docFile.originalname}`);
 
-        await fileUpload.save(file.buffer, {
-          contentType: file.mimetype,
+        await fileUpload.save(docFile.buffer, {
+          contentType: docFile.mimetype,
           public: true
         });
+
+        let imageUrl = null;
+        if (imageFile) {
+          const imageUpload = bucket.file(`image/${imageFile.originalname}`);
+          await imageUpload.save(imageFile.buffer, {
+            contentType: imageFile.mimetype,
+            public: true
+          });
+          imageUrlArray = await imageUpload.getSignedUrl({
+            action: 'read',
+            expires: '03-17-2025'
+          });
+          imageUrl = imageUrlArray[0];
+        }
 
         const url = await fileUpload.getSignedUrl({
           action: 'read',
@@ -37,6 +53,7 @@ const handleAddResource = async (req, res) => {
           numUserRated: isNaN(Number(numUserRated))?0:Number(numUserRated),
           genre: genreArray,
           author: authorArray,
+          imageUrl: imageUrl,
           ...rest,
           fileUrl: url[0],
           createdAt: new Date().toISOString(),
@@ -65,60 +82,100 @@ const handleGetResourceById = async (req, res) => {
 };
 
 const handleUpdateResource = async (req, res) => {
-  const id=req.params.id;
-  try{
-    upload.single('document')(req, res, async (err) => {
+  const id = req.params.id;
+  try {
+    upload.fields([
+      { name: 'document', maxCount: 1 },
+      { name: 'image', maxCount: 1 }
+    ])(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ msg: 'Failed to upload file1', details: err.message });
       }
 
-      const docRef=Resources.doc(id);
-      const docSnap=await docRef.get();
+      const docRef = Resources.doc(id);
+      const docSnap = await docRef.get();
 
-      if(!docSnap.exists){
-        return {msg: 'Resource not found', status: 404};
-      }
-      
-      if(req.file){
-        const oldFileUrl=docSnap.data().fileUrl;
-        const oldFileName = decodeURIComponent(oldFileUrl.split('/').pop().split('?')[0]);
-        const bucket=store.bucket();
-        const oldFile=bucket.file(oldFileName);
-        await oldFile.delete();
+      if (!docSnap.exists) {
+        return res.status(404).json({ msg: 'Resource not found' });
       }
 
-      if(req.file){
-        const file=req.file;
-        const bucket=store.bucket();
-        const fileUpload=bucket.file(file.originalname);
+      const updates = {
+        fileUrl: docSnap.data().fileUrl,
+        imageUrl: docSnap.data().imageUrl
+      };
 
-        await fileUpload.save(file.buffer,{
-          contentType: file.mimetype,
+      // Handle document update
+      if (req.files['document']) {
+        const documentFile = req.files['document'][0];
+        const oldFileUrl = docSnap.data().fileUrl;
+        const bucket = store.bucket();
+
+        if (oldFileUrl) {
+          const oldFileName = decodeURIComponent(oldFileUrl.split('/').pop().split('?')[0]);
+          const oldFile = bucket.file(`document/${oldFileName}`);
+          await oldFile.delete();
+        }
+
+        const fileUpload = bucket.file(`document/${documentFile.originalname}`);
+        await fileUpload.save(documentFile.buffer, {
+          contentType: documentFile.mimetype,
           public: true
         });
-        
-        newFileUrl=await fileUpload.getSignedUrl({
+
+        const newFileUrl = await fileUpload.getSignedUrl({
           action: 'read',
           expires: '03-17-2025'
         });
 
-        const data = {
-          id: id,
-          name: req.body.name,
-          fileUrl: newFileUrl[0],
-          createdAt: new Date().toISOString(),
-        };
-
-        const response = await updateResource(data);
-        res.status(response.status).json(response);
-      } else {
-        res.status(400).json({ msg: 'Failed to upload file' });
+        updates.fileUrl = newFileUrl[0];
       }
-    }); 
-  } catch (error){
+
+      // Handle image update
+      if (req.files['image']) {
+        const imageFile = req.files['image'][0];
+        const oldImageUrl = docSnap.data().imageUrl;
+        const bucket = store.bucket();
+
+        if (oldImageUrl) {
+          const oldImageName = decodeURIComponent(oldImageUrl.split('/').pop().split('?')[0]);
+          const oldImage = bucket.file(`image/${oldImageName}`);
+          await oldImage.delete();
+        }
+
+        const imageUpload = bucket.file(`image/${imageFile.originalname}`);
+        await imageUpload.save(imageFile.buffer, {
+          contentType: imageFile.mimetype,
+          public: true
+        });
+
+        let newImageUrlArray = await imageUpload.getSignedUrl({
+          action: 'read',
+          expires: '03-17-2025'
+        });
+
+        updates.imageUrl = newImageUrlArray[0];
+      }
+
+      // Include the rest of the data
+      const { createdAt, ...rest } = req.body;
+      if (!createdAt) {
+        updates.createdAt = new Date().toISOString();
+      }
+
+      const data = {
+        id: id,
+        fileUrl: updates.fileUrl,
+        imageUrl: updates.imageUrl,
+        ...rest
+      };
+
+      const response = await updateResource(data);
+      res.status(response.status).json(response);
+    });
+  } catch (error) {
     res.status(400).json({ msg: 'Failed to update resource', details: error.message });
   }
-}
+};
 
 const handleUpdateResourceRating = async (req, res) => {
   try{
@@ -141,17 +198,22 @@ const handleDeleteResource = async (req, res) => {
       return res.status(404).json({ msg: 'Resource not found' });
     }
 
-    // Delete the file from Firebase Storage
     const oldFileUrl = docSnap.data().fileUrl;
     const oldFileName = decodeURIComponent(oldFileUrl.split('/').pop().split('?')[0]);
     const bucket = store.bucket();
-    const oldFile = bucket.file(oldFileName);
+    const oldFile = bucket.file(`document/${oldFileName}`);
 
-    await oldFile.delete(); // Delete file from storage
+    await oldFile.delete();
 
-    // Now delete the resource from Firestore
-    const response = await deleteResource(id); // Ensure this function deletes the Firestore document
-    return res.status(response.status).json(response); // Send the response back
+    const oldImageUrl = docSnap.data().imageUrl;
+    if (oldImageUrl) {
+      const oldImageName = decodeURIComponent(oldImageUrl.split('/').pop().split('?')[0]);
+      const oldImage = bucket.file(`image/${oldImageName}`);
+      await oldImage.delete();
+    }
+
+    const response = await deleteResource(id); 
+    return res.status(response.status).json(response);
 
   } catch (error) {
     return res.status(400).json({ msg: 'Failed to delete resource', details: error.message });

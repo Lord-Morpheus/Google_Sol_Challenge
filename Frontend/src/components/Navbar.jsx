@@ -10,7 +10,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full mt-1 py-4 px-2">
+    <nav className="w-full mt-3 py-2 px-2">
       <div className="flex justify-between items-center">
         <div className=" text-2xl font-bold">LibBooks</div>
         <div className="flex gap-4 mr-3">
