@@ -2,7 +2,7 @@ import React from "react";
 
 const Addbook = () => {
   return (
-    <div className="grid place-items-center bg-gray-100 rounded-2xl">
+    <div className="grid place-items-center bg-gray-100 rounded-xl h-full p-5">
       <h1 className="font-bold text-3xl">Add Book</h1>
       <form className="flex flex-col p-5">
         <div className="flex w-full">
@@ -65,7 +65,7 @@ const Addbook = () => {
         <textarea
           type="text"
           placeholder="Description"
-          className="p-2 m-2 border-2 border-gray-300 rounded-md w-full h-32"
+          className="p-2 m-2 border-2 border-gray-300 rounded-md w-full min-h-32"
         />
         <input
           type="text"

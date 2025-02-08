@@ -18,7 +18,7 @@ function App() {
     >
       <Sidebar />
       <div
-        className={`min-h-lvh rounded-md ${
+        className={`rounded-md ${
           isOpen ? "col-span-5" : "col-span-13"
         }`}
       >
