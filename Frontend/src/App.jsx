@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Homepage from "./pages/homePage.jsx";
@@ -12,11 +11,11 @@ function App() {
 
   return (
     <div
-      className={`grid h-lvh items-center ${
+      className={`grid min-h-lvh items-center ${
         isOpen ? "grid-cols-6" : "grid-cols-14"
-      } bg-[#FDFBF7] transition-all duration-500 ease-in-out`} // Adjusted transition duration
+      } bg-[#FDFBF7] transition-all duration-500 ease-in-out`}
     >
-      <Sidebar />
+      <Sidebar/>
       <div
         className={`rounded-md ${
           isOpen ? "col-span-5" : "col-span-13"
