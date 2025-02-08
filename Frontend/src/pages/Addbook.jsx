@@ -65,7 +65,7 @@ const Addbook = () => {
         <textarea
           type="text"
           placeholder="Description"
-          className="p-2 m-2 border-2 border-gray-300 rounded-md w-full h-48"
+          className="p-2 m-2 border-2 border-gray-300 rounded-md w-full h-32"
         />
         <input
           type="text"
