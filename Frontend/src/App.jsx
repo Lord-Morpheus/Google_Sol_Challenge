@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div
-      className={`grid min-h-lvh items-center ${
+      className={`grid items-center ${
         isOpen ? "grid-cols-6" : "grid-cols-14"
       } bg-[#FDFBF7] transition-all duration-500 ease-in-out`}
     >

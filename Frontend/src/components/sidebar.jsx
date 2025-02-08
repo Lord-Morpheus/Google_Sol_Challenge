@@ -95,7 +95,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-start py-4 transition-all duration-300 ease-in-out ${
+      className={`flex flex-col items-center justify-start py-4 transition-all duration-300 ease-in-out sticky top-0 ${
         isOpen ? "grid-cols-2" : "grid-cols-1"
       } h-full`}
     >
