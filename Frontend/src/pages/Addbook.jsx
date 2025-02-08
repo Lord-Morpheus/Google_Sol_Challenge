@@ -74,7 +74,7 @@ const Addbook = () => {
         />
         <button
           onClick={(e) => e.preventDefault()}
-          className="p-2 m-2 bg-blue-500 text-white rounded-md w-48 self-center"
+          className="p-2 m-2 bg-gray-100 text-black border-black border-2 hover:bg-blue-500 rounded-md w-48 self-center"
         >
           Add Book
         </button>
