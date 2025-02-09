@@ -61,7 +61,13 @@ const Navbar = () => {
               />
             </svg>
           </button>
-          <button onClick={() => navigateLogin("/login")} className="border-[#e7e3e4] rounded-full p-1 bg-[#EFF6FB]">
+          <button 
+            onClick={() => navigateLogin("/login")} 
+            className="border-[#e7e3e4] rounded-full p-1 bg-[#EFF6FB] 
+             transition-all duration-300 ease-in-out 
+             hover:shadow-[0_0_10px_#50a2ff] 
+             active:scale-90"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
