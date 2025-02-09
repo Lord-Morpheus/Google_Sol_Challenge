@@ -14,7 +14,17 @@ const Addbook = () => {
   });
   const handlesubmit = (e) => {
     console.log(book);
-    e.preventDefault();  
+    setBook({
+      bookName: "",
+      authorName: "",
+      genre: "",
+      language: "",
+      publication: "",
+      publishedYear: "",
+      age: "",
+      description: "",
+    }) 
+    e.preventDefault;
   };
   return (
     <div className="grid place-items-center bg-gray-100 rounded-xl h-full p-5">
@@ -104,7 +114,7 @@ const Addbook = () => {
           className=" self-center p-2 m-2 border-2 border-gray-300 rounded-md w-32"
         />
         <button
-          onClick={(e) => e.preventDefault()}
+          onClick={handlesubmit}
           className="p-2 m-2 bg-gray-100 text-black border-black border-2 hover:bg-blue-500 rounded-md w-48 self-center"
         >
           Add Book
