@@ -1,12 +1,51 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import {auth, signInWithEmailAndPassword} from '../../firebaseConfig.js';
+import { useDispatch,useSelector } from "react-redux";
+import { isLogin } from "../redux/actions";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const isLoggedIn = useSelector((state) => state.login.isLogin);
+  const dispatch = useDispatch();
+  const navigate= useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  },[isLoggedIn,navigate]);
+
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log("Login working");
+    console.log(e);
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        var idToken = userCredential.user.getIdToken();
+        return idToken;
+      })
+      .then((idToken) => {
+        fetch("http://localhost:4000/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ idToken }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            dispatch(isLogin(data));
+            // navigate("/");
+            console.log(data);
+          })
+          
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -15,7 +54,9 @@ const Login = () => {
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               placeholder="Enter your email"
@@ -25,7 +66,9 @@ const Login = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               placeholder="Enter your password"
@@ -42,7 +85,10 @@ const Login = () => {
           </button>
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
-          Don't have an account? <a href="/signup" className="text-blue-500 hover:underline">Sign up</a>
+          Don&apos;t have an account?{" "}
+          <a href="/signup" className="text-blue-500 hover:underline">
+            Sign up
+          </a>
         </p>
       </div>
     </div>

@@ -25,7 +25,7 @@ const signUp = async (data) => {
     });
     
     const addUser=await Users.doc(user.uid).set({
-      role: 'user',
+      role: 'admin',
       email,
       ...rest,
       createdAt: new Date().toISOString(),

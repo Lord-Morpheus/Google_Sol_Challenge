@@ -7,8 +7,8 @@ const handleSignUp = async (req, res) => {
 }
 
 const handleLogin = async (req, res) => {
-  const {email,password}=req.body;
-  const response=await login(email,password);
+  const {idToken}=req.body;
+  const response=await login(idToken);
   res.status(response.status).json(response);
 }
 

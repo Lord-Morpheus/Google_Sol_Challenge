@@ -11,6 +11,10 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   const isOpen=useSelector((state)=>state.sidebar.isOpen);
+  const userData=useSelector((state)=>state.login.userData);
+  const isLogin=useSelector((state)=>state.login.isLogin);
+  console.log(isLogin);
+  console.log(userData);
 
   const itemsPerPage = 8;
   const authorsPerPage = 4;

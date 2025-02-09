@@ -1,16 +1,24 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toggleMode } from "../redux/actions";
+import { toggleMode, isLogin } from "../redux/actions";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Navbar = () => {
   const isDay = useSelector((state) => state.sidebar.isDay);
+  const isLoggedIn = useSelector((state) => state.login.isLogin);
   const dispatch = useDispatch();
 
   const handleMode = () => {
     dispatch(toggleMode());
   };
 
-  const navigateLogin = useNavigate();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
 
   return (
     <nav className="w-full mt-3 py-2 px-2">
@@ -62,7 +70,9 @@ const Navbar = () => {
             </svg>
           </button>
           <button 
-            onClick={() => navigateLogin("/login")} 
+            onClick={() => {
+              dispatch(isLogin());
+            }}
             className="border-[#e7e3e4] rounded-full p-1 bg-[#EFF6FB] 
              transition-all duration-300 ease-in-out 
              hover:shadow-[0_0_10px_#50a2ff] 
