@@ -1,24 +1,27 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toggleMode, isLogin } from "../redux/actions";
+import { toggleMode } from "../redux/actions";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 const Navbar = () => {
   const isDay = useSelector((state) => state.sidebar.isDay);
   const isLoggedIn = useSelector((state) => state.login.isLogin);
+  const userData = useSelector((state) => state.login.userData);
   const dispatch = useDispatch();
-
+  console.log("userData", userData);
   const handleMode = () => {
     dispatch(toggleMode());
   };
 
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login");
     }
   }, [isLoggedIn, navigate]);
+
+  const userInitials =
+    Object.keys(userData).length > 0 ? userData.data.name[0] : "";
 
   return (
     <nav className="w-full mt-3 py-2 px-2">
@@ -28,7 +31,9 @@ const Navbar = () => {
           <button
             className={`border-[#e7e3e4] rounded-full p-1 ${
               isDay ? "bg-[#EFF6FB]" : "bg-black"
-            }`}
+            } transition-all duration-300 ease-in-out 
+             hover:shadow-[0_0_10px_#50a2ff] 
+             active:scale-90`}
             onClick={handleMode}
           >
             {!isDay ? (
@@ -55,24 +60,7 @@ const Navbar = () => {
               </svg>
             )}
           </button>
-          <button className="border-[#e7e3e4] rounded-full p-1 bg-[#EFF6FB]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="#50a2ff"
-              className="size-6"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          <button 
-            onClick={() => {
-              dispatch(isLogin());
-            }}
+          <button
             className="border-[#e7e3e4] rounded-full p-1 bg-[#EFF6FB] 
              transition-all duration-300 ease-in-out 
              hover:shadow-[0_0_10px_#50a2ff] 
@@ -86,10 +74,40 @@ const Navbar = () => {
             >
               <path
                 fillRule="evenodd"
-                d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z"
                 clipRule="evenodd"
               />
             </svg>
+          </button>
+          <button
+            className="border-[#e7e3e4] rounded-full p-1 bg-[#EFF6FB] 
+             transition-all duration-300 ease-in-out 
+             hover:shadow-[0_0_10px_#50a2ff] 
+             active:scale-90"
+          >
+            {isLoggedIn ? (
+              <div className="flex items-center justify-center gap-1">
+                <span className="flex items-center justify-center bg-[#50a2ff] text-white rounded-full size-6 capitalize">
+                  {userInitials}
+                </span>
+                <p className="text-[#001B3D] capitalize font-semibold">
+                  welcome, {userData.data.name} !
+                </p>
+              </div>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="#50a2ff"
+                className="size-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            )}
           </button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDispatch,useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [resourceData, setResourceData] = useState([]);
@@ -11,15 +12,20 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   const isOpen=useSelector((state)=>state.sidebar.isOpen);
-  const userData=useSelector((state)=>state.login.userData);
   const isLogin=useSelector((state)=>state.login.isLogin);
-  console.log(isLogin);
-  console.log(userData);
-
+  const data=useSelector((state)=>state.login.userData);
+  const userData=data.data;
+  console.log("userData",userData);
+  const navigate=useNavigate();
+  
   const itemsPerPage = 8;
   const authorsPerPage = 4;
 
   useEffect(() => {
+    if(isLogin===false){
+      navigate("/login");
+    }
+
     const fetchResources = async () => {
       const response = await fetch("http://localhost:4000/resources/all");
       const resource = await response.json();
@@ -35,7 +41,7 @@ const HomePage = () => {
       console.log(authors);
     };
     fetchResources();
-  }, []);
+  }, [isLogin,navigate]);
 
   const currentItemsExplore = resourceData.slice(
     currentPageExplore * itemsPerPage,
@@ -152,14 +158,14 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-4 pl-4">
+          <div className="grid grid-cols-4 pl-4 gap-2">
             {loading ? (
               <div>Loading...</div> // Or show a loading spinner here
             ) : (
               currentItemsExplore?.map((resource, index) => (
-                <div className="basis-md " key={index}>
+                <div className="basis-md" key={index}>
                   <img
-                    className="object-fill h-[80%] w-[80%]"
+                    className="object-fill h-[80%] w-[90%]"
                     src={resource.imageUrl}
                     alt="book image"
                   />

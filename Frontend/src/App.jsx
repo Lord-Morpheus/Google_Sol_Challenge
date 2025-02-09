@@ -9,22 +9,20 @@ import Addbook from "./pages/Addbook.jsx";
 function App() {
   const isOpen = useSelector((state) => state.sidebar.isOpen);
   const isLogin = useSelector((state) => state.login.isLogin);
-  const userData = useSelector((state) => state.login.userData);
-  console.log(userData);
-  console.log(isLogin);
+  console.log("isLogin",isLogin);
   return (
     <div
-      className={`grid items-center ${
+      className={`grid ${
         isOpen ? "grid-cols-6" : "grid-cols-14"
       } bg-[#FDFBF7] transition-all duration-500 ease-in-out`}
     >
-      {isLogin && <Sidebar/>}
       {/* <Sidebar/> */}
+      {isLogin && <Sidebar/>}
       <div
         className={`rounded-md ${
           isLogin===false ? "col-span-full": isOpen && isLogin? "col-span-5" : "col-span-13"
         }`}
-      >
+        >
         <Router>
           <Navbar />
           <Routes>
