@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMode } from "../redux/actions";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const isDay = useSelector((state) => state.sidebar.isDay);
@@ -8,6 +9,8 @@ const Navbar = () => {
   const handleMode = () => {
     dispatch(toggleMode());
   };
+
+  const navigateLogin = useNavigate();
 
   return (
     <nav className="w-full mt-3 py-2 px-2">
@@ -58,7 +61,7 @@ const Navbar = () => {
               />
             </svg>
           </button>
-          <button className="border-[#e7e3e4] rounded-full p-1 bg-[#EFF6FB]">
+          <button onClick={() => navigateLogin("/login")} className="border-[#e7e3e4] rounded-full p-1 bg-[#EFF6FB]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
