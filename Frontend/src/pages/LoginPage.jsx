@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth, signInWithEmailAndPassword } from "../../firebaseConfig.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import checkTokenValidity from "../middleware/checkLogin.js";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+  useEffect(() => {
+    const loggedIn = checkTokenValidity();
+    if (loggedIn) {
+      navigate("/");
+    }
+  }, [navigate]);
+  
   const handleLogin = (e) => {
     e.preventDefault();
     console.log(e);
