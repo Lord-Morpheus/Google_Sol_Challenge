@@ -11,6 +11,8 @@ const HomePage = () => {
   const [currentPageAuthors, setCurrentPageAuthors] = useState(0);
   const [currentBook, setCurrentBook] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState(null);
+  const [userReading, setUserReading] = useState([]);
 
   const isOpen = useSelector((state) => state.sidebar.isOpen);
   const islogin = checkTokenValidity();
@@ -22,30 +24,57 @@ const HomePage = () => {
   useEffect(() => {
     if (islogin === false) {
       navigate("/login");
+    } else {
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      // console.log("userData", userData);
+      const { userId } = userData;
+      fetchUserData(userId);
+      fetchResources();
     }
+  }, [islogin, navigate]);
 
-    const fetchResources = async () => {
+  // console.log("userData", resourceData);
+  const fetchUserData = async (userId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/users/get/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      setUserData(data.data);
+      setUserReading(data.data.progress);
+    } catch (error) {
+      console.log("failed to fetch user", error);
+    }
+  };
+
+  const fetchResources = async () => {
+    try {
       const response = await fetch("http://localhost:4000/resources/all");
       const resource = await response.json();
       const data = resource.data;
       setResourceData(data);
-      // console.log(resourceData.pagesRead);
       setLoading(false);
 
       const authors = [
         ...new Set(data.map((resource) => resource.author).flat()),
       ];
       setAuthors(authors);
-      // console.log(authors);
-    };
-    fetchResources();
-  }, [islogin, navigate]);
+    } catch (error) {
+      console.log("failed to fetch resources", error);
+    }
+  };
 
   const currentItemsExplore = resourceData.slice(
     currentPageExplore * itemsPerPage,
     (currentPageExplore + 1) * itemsPerPage
   );
-  const currentItemsRead = resourceData.slice(
+  const currentItemsRead = userReading.slice(
     currentPageRead * authorsPerPage,
     (currentPageRead + 1) * authorsPerPage
   );
@@ -53,7 +82,14 @@ const HomePage = () => {
     currentPageAuthors * authorsPerPage,
     (currentPageAuthors + 1) * authorsPerPage
   );
-  const currentBookData = resourceData[currentBook];
+  // console.log(resourceData);
+  const currentBookData = currentItemsRead?.map((resource) => {
+    const bookResource = resourceData.find((r) => r.id === resource.id);
+    return {
+      ...bookResource,
+      pagesRead: resource.pagesRead,
+    };
+  });
 
   const handlePreviousExplore = () => {
     if (currentPageExplore > 0) {
@@ -83,7 +119,7 @@ const HomePage = () => {
     }
   };
   const handleNextRead = () => {
-    if ((currentPageRead + 1) * authorsPerPage < resourceData.length) {
+    if ((currentPageRead + 1) * authorsPerPage < userReading.length) {
       setCurrentPageRead(currentPageRead + 1);
     }
   };
@@ -94,44 +130,50 @@ const HomePage = () => {
     }
   };
   const handleNextBook = () => {
-    if (currentBook < resourceData.length - 1) {
+    if (currentBook < userReading.length - 1) {
       setCurrentBook(currentBook + 1);
     }
   };
 
-  // const addToWishlist = async (resource) => {
-  //   const updatedData = {
-  //     ...userData,
-  //     wishlist: userData.wishlist.includes(resource.id)
-  //       ? userData.wishlist.filter(id => id !== resource.id) // Remove if exists
-  //       : [...userData.wishlist, resource.id], // Add if doesn't exist
-  //   };    
-  //   // dispatch(isLogin(updatedData));
-  //   // userData=updatedData;
-  //   // updateUserData(updatedData);
-    
-  //   const updatedWishList=updatedData.wishlist;
+  const addToWishlist = async (resource) => {
+    const newWishlist = userData.wishlist.includes(resource.id)
+      ? userData.wishlist.filter((id) => id !== resource.id)
+      : [...userData.wishlist, resource.id];
+    // console.log("newWishlist", newWishlist);
+    // console.log(resource.id);
 
-  //   console.log("updatedData", updatedData);
-  //   await fetch("http://localhost:4000/users/update", {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       id: userData.id,
-  //       wishlist: updatedWishList,
-  //     }),
-  //   })
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     console.log("wishlist updated", data);
-  //   });
-  //   // const res = await response.json();
-  //   // console.log("successfully added ", res.data);
-  //   // console.log("succesfully added wishlist",userData);
-  // };
+    try {
+      const response = await fetch(
+        `http://localhost:4000/users/update/${userData.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            wishlist: newWishlist,
+          }),
+        }
+      );
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log("wishlist updated", data.data);
+        setUserData({
+          ...userData,
+          wishlist: newWishlist,
+        });
+      } else {
+        console.log(
+          "An error occurred during adding to wishlist",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.log("failed to update wishlist", error);
+    }
+  };
 
+  console.log("currentBookData", currentBookData);
   return (
     <div className="flex bg-[#f6faff]">
       <div className={`grid grid-rows-3 gap-2 ${isOpen ? "w-2/3" : "w-5/7"}`}>
@@ -195,10 +237,19 @@ const HomePage = () => {
               currentItemsExplore?.map((resource, index) => (
                 <div className="basis-md relative" key={index}>
                   <div
-                    className="absolute right-2 rounded-full p-1 bg-white flex items-center justify-center cursor-pointer"
-                    // onClick={() => addToWishlist(resource)}
+                    className="absolute right-1 top-0 rounded-full p-1 bg-white flex items-center justify-center cursor-pointer"
+                    onClick={() => addToWishlist(resource)}
                   >
-                    {/* {userData?.wishlist.includes(resource.id) ? (
+                    {userData?.wishlist.includes(resource.id) ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="#FE3F78"
+                        className="size-6"
+                      >
+                        <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                      </svg>
+                    ) : (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -213,16 +264,7 @@ const HomePage = () => {
                           d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                         />
                       </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="size-6"
-                      >
-                        <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-                      </svg>
-                    )} */}
+                    )}
                   </div>
                   <img
                     className="object-fill h-[80%] w-[90%]"
@@ -284,44 +326,50 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          {currentItemsRead?.map((resource, index) => (
-            <div
-              className="flex justify-between items-center px-3 py-1"
-              key={index}
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  className="h-10 w-10 rounded-full"
-                  src={resource.imageUrl}
-                  alt="book image"
-                />
-                <div className="text-[#001B3D]">
-                  <p className="text-md capitalize">{resource.name}</p>
+          {currentItemsRead?.map((resource, index) => {
+            const bookResource = resourceData?.find(
+              (r) => r.id === resource.id
+            );
+            // console.log("bookResource", resource);
+            return (
+              <div
+                className="flex justify-between items-center px-3 py-1"
+                key={index}
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    className="h-10 w-10 rounded-full"
+                    src={bookResource.imageUrl}
+                    alt="book image"
+                  />
+                  <div className="text-[#001B3D]">
+                    <p className="text-md capitalize">{bookResource.name}</p>
+                  </div>
+                </div>
+                <div className="p-4 flex items-center gap-2">
+                  <div className="w-90 h-2 bg-[#EBF4FF] rounded-full">
+                    <div
+                      className="h-full bg-[#50a2ff] rounded-full"
+                      style={{
+                        width: `${
+                          (resource.pagesRead / bookResource.totalPages) * 100
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      {(
+                        (resource.pagesRead / bookResource.totalPages) *
+                        100
+                      ).toFixed(1)}
+                      %
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="p-4 flex items-center gap-2">
-                <div className="w-90 h-2 bg-[#EBF4FF] rounded-full">
-                  <div
-                    className="h-full bg-[#50a2ff] rounded-full"
-                    style={{
-                      width: `${
-                        (resource.pagesRead || 40 / resource.totalPages) * 100
-                      }%`,
-                    }}
-                  ></div>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">
-                    {(
-                      ((resource.pagesRead || 40) / resource.totalPages) *
-                      100
-                    ).toFixed(1)}
-                    %
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       <div className={`grid grid-rows-3 gap-2 ${isOpen ? "w-1/3" : "w-2/7"}`}>
@@ -437,25 +485,25 @@ const HomePage = () => {
             {loading ? (
               <div>Loading...</div>
             ) : (
-              currentBookData && (
+              currentBookData.length>0 && (
                 <div className="flex flex-col items-start gap-4 px-4">
                   <img
                     className="w-full h-[420px] rounded-lg object-fill"
-                    src={currentBookData.imageUrl}
+                    src={currentBookData[currentBook].imageUrl}
                     alt="book image"
                   />
                   <div className="flex flex-col gap-2 w-full">
                     <div className="flex justify-between items-baseline gap-4">
                       <p className="text-2xl capitalize text-[#001B3D]">
-                        {currentBookData.name}
+                        {currentBookData[currentBook].name}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {currentBookData.author.join(" & ")}
+                        {currentBookData[currentBook].author.join(" & ")}
                       </p>
                     </div>
                     <div className="flex flex-col gap-2">
                       <p className="text-sm text-gray-500">
-                        {currentBookData.description}
+                        {currentBookData[currentBook].description}
                       </p>
                       <div className="flex items-baseline gap-2">
                         <p className="capitalize text-gray-500">rating</p>
@@ -464,20 +512,20 @@ const HomePage = () => {
                             className="h-full bg-[#50a2ff] rounded-full"
                             style={{
                               width: `${
-                                (currentBookData.userRating / 5) * 100
+                                (currentBookData[currentBook].userRating / 5) * 100
                               }%`,
                             }}
                           ></div>
                         </div>
                         <div>
                           <p className="text-sm text-gray-500">
-                            {currentBookData.userRating}/5
+                            {currentBookData[currentBook].userRating}/5
                           </p>
                         </div>
                       </div>
                       <span className="text-end text-sm text-gray-500">
-                        ({currentBookData.numUserRated} user
-                        {currentBookData.numUserRated > 1 ? "s" : ""} rated)
+                        ({currentBookData[currentBook].numUserRated} user
+                        {currentBookData[currentBook].numUserRated > 1 ? "s" : ""} rated)
                       </span>
                     </div>
                   </div>

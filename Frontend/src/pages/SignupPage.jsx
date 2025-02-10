@@ -28,15 +28,17 @@ const Signup = () => {
     try {
       const userCredential=await createUserWithEmailAndPassword(email, password);
       const user=userCredential.user;
-      var idToken =user.getIdToken();
+      const idToken =user.getIdToken();
+      const userId=user.uid;
 
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + 3);
 
       localStorage.setItem(
-        "idToken",
+        "userData",
         JSON.stringify({
           token: idToken,
+          userId: userId,
           expiryDate: expiryDate.toISOString(),
         }),
       );

@@ -24,7 +24,8 @@ const handleGetUserByEmail = async (req, res) => {
 }
 
 const handleUpdateUser = async (req, res) => {
-  const data=req.body;
+  const id=req.params.id;
+  const data={id,...req.body};
   const response= await updateUser(data);
   res.status(response.status).json(response);
 }

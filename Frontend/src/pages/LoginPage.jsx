@@ -14,27 +14,28 @@ const Login = () => {
       navigate("/");
     }
   }, [navigate]);
-  
+
   const handleLogin = (e) => {
     e.preventDefault();
     console.log(e);
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        var idToken = userCredential.user.getIdToken();
-        return idToken;
-      })
-      .then((idToken) => {
+        const idToken = userCredential.user.getIdToken();
+        const userId = userCredential.user.uid;
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + 3);
-
         localStorage.setItem(
-          "idToken",
+          "userData",
           JSON.stringify({
             token: idToken,
+            userId: userId,
             expiryDate: expiryDate.toISOString(),
           })
         );
+        return idToken;
+      })
+      .then((idToken) => {
         fetch("http://localhost:4000/auth/login", {
           method: "POST",
           headers: {

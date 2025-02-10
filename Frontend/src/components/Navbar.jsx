@@ -1,17 +1,43 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMode } from "../redux/actions";
 import checkTokenValidity from "../middleware/checkLogin";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
+  const [userData,setUserData]=useState(null);
   const isDay = useSelector((state) => state.sidebar.isDay);
   const isLoggedIn = checkTokenValidity();
+  const data = JSON.parse(localStorage.getItem("userData"));
+  const userId=data.userId;
   const dispatch = useDispatch();
   // console.log("userData");
   const handleMode = () => {
     dispatch(toggleMode());
   };
 
-  const userInitials ="A";
+  useEffect(() => {
+    const fetchUserData = async (userId) => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/users/get/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        setUserData(data.data);
+      } catch (error) {
+        console.log("failed to fetch user", error);
+      }
+    };
+    fetchUserData(userId);
+  }, [userId]);
+  // console.log(userData);
+  const userInitials = userData!==null ? userData.name[0]  : "";
+  const userName=userData!==null ? userData.name : "";
 
   return (
     <nav className="w-full mt-3 py-2 px-2">
@@ -81,7 +107,7 @@ const Navbar = () => {
                   {userInitials}
                 </span>
                 <p className="text-[#001B3D] capitalize font-semibold">
-                  {/* welcome, {userData.data.name} ! */}
+                  welcome, {userName}!
                 </p>
               </div>
             ) : (

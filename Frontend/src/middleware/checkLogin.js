@@ -1,12 +1,12 @@
 const checkTokenValidity = () => {
-  const tokenData = JSON.parse(localStorage.getItem('idToken'));
+  const tokenData = JSON.parse(localStorage.getItem('userData'));
 
   if (tokenData) {
     const currentDate = new Date();
     const expiryDate = new Date(tokenData.expiry);
 
     if (currentDate > expiryDate) {
-      localStorage.removeItem('idToken');
+      localStorage.removeItem('userData');
       // console.log("Token has expired, logging out...");
       return false;
     } else {
