@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import checkTokenValidity from "../middleware/checkLogin";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -18,7 +19,6 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    // console.log("Signup using", name, email, password, confirmPassword);
 
     if (password !== confirmPassword) {
       alert("Passwords do not match");
@@ -26,15 +26,40 @@ const Signup = () => {
     }
 
     try {
+      const userCredential=await createUserWithEmailAndPassword(email, password);
+      const user=userCredential.user;
+      var idToken =user.getIdToken();
+
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + 3);
+
+      localStorage.setItem(
+        "idToken",
+        JSON.stringify({
+          token: idToken,
+          expiryDate: expiryDate.toISOString(),
+        }),
+      );
+
+      const userData = {
+        name,
+        email,
+        password,
+      };
+
       const response = await fetch("http://localhost:4000/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify(userData),
       });
-      window.location.href = "/login";
-
+      if(response.status===200){
+        window.location.href = "/login";
+      }else{
+        alert("An error occurred during signup");
+      }
+      
     } catch (error) {
       console.error("Error during signup", error);
       alert("An error occurred during signup");

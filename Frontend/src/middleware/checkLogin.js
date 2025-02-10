@@ -7,15 +7,15 @@ const checkTokenValidity = () => {
 
     if (currentDate > expiryDate) {
       localStorage.removeItem('idToken');
-      console.log("Token has expired, logging out...");
+      // console.log("Token has expired, logging out...");
       return false;
     } else {
-      console.log("User is still logged in");
+      // console.log("User is still logged in");
       return true;
     }
   }
   else {
-    console.log("User is not logged in");
+    // console.log("User is not logged in");
     return false;
   }
 };
