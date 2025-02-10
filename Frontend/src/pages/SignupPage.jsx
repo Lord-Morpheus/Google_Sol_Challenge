@@ -7,15 +7,29 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    console.log("Signup using", name, email, password, confirmPassword);
+    // console.log("Signup using", name, email, password, confirmPassword);
 
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-    
+
+    try {
+      const response = await fetch("http://localhost:4000/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+      window.location.href = "/login";
+
+    } catch (error) {
+      console.error("Error during signup", error);
+      alert("An error occurred during signup");
+    }
   };
 
   return (
