@@ -23,14 +23,13 @@ function App() {
       className={`grid ${
         isOpen ? "grid-cols-6" : "grid-cols-14"
       } bg-[#FDFBF7] transition-all duration-500 ease-in-out`}
-    >
+    > <Router>
       {isLogin && <Sidebar/>}
       <div
         className={`rounded-md ${
           isLogin===false ? "col-span-full": isOpen && isLogin? "col-span-5" : "col-span-13"
         }`}
         >
-        <Router>
           <Navbar />
           <Routes>
             <Route path="/" element={<Homepage />} />
@@ -38,8 +37,8 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/addbook" element={<Addbook />} />
           </Routes>
-        </Router>
       </div>
+      </Router>
     </div>
   );
 }

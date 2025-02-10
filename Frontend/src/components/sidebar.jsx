@@ -4,8 +4,10 @@ import sidebar from "../assets/sidebar.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar, toggleSearchbar } from "../redux/actions";
 import checkTokenValidity from "../middleware/checkLogin";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publications, setPublications] = useState([]);
@@ -40,10 +42,10 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("idToken");
     isLoggedIn = false;
-    if(!isLoggedIn){
+    if (!isLoggedIn) {
       window.location.href = "/login";
     }
-  }
+  };
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -193,6 +195,27 @@ const Sidebar = () => {
             />
           </svg>
           <h4 className={`${isOpen ? "" : "hidden"}`}>Collection</h4>
+        </div>
+
+        <div
+          onClick={() => navigate("/addbook")}
+          className={`flex items-center ${
+            isOpen ? "justify-start" : "justify-center"
+          } gap-2 w-[95%] p-1 mt-2 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className={`${isOpen ? "size-5" : "size-8"}`}
+          >
+            <path
+              fillRule="evenodd"
+              d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <h4 className={`${isOpen ? "" : "hidden"}`}>Add Book</h4>
         </div>
         <div
           className={`flex items-center ${
@@ -501,7 +524,12 @@ const Sidebar = () => {
           />
         </svg>
 
-        <h4 className={`${isOpen ? "" : "hidden"} font-semibold`} onClick={handleLogout}>Logout</h4>
+        <h4
+          className={`${isOpen ? "" : "hidden"} font-semibold`}
+          onClick={handleLogout}
+        >
+          Logout
+        </h4>
       </div>
     </div>
   );
