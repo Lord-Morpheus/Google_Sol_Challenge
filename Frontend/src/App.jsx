@@ -3,21 +3,27 @@ import { useSelector } from "react-redux";
 import Homepage from "./pages/homePage.jsx";
 import Sidebar from "./components/sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
-import Login from "./pages/Login.jsx";
-import Signup from "./pages/Signup.jsx";
+import Login from "./pages/LoginPage.jsx";
+import Signup from "./pages/SignupPage.jsx";
 import Addbook from "./pages/Addbook.jsx";
+import checkTokenValidity from "./middleware/checkLogin.js";
+import { useEffect, useState } from "react";
 
 function App() {
   const isOpen = useSelector((state) => state.sidebar.isOpen);
-  const isLogin = useSelector((state) => state.login.isLogin);
-  // console.log("isLogin",isLogin);
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    const checkValidity = checkTokenValidity();
+    setIsLogin(checkValidity);
+  },[setIsLogin]);
+
   return (
     <div
       className={`grid ${
         isOpen ? "grid-cols-6" : "grid-cols-14"
       } bg-[#FDFBF7] transition-all duration-500 ease-in-out`}
     >
-      {/* <Sidebar/> */}
       {isLogin && <Sidebar/>}
       <div
         className={`rounded-md ${

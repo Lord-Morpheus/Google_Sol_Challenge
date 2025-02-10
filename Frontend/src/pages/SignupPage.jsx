@@ -1,23 +1,11 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { isLogin } from "../redux/actions";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const isLoggedIn = useSelector((state) => state.login.isLogin);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/");
-    }
-  }, [isLoggedIn, navigate]);
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -27,10 +15,7 @@ const Signup = () => {
       alert("Passwords do not match");
       return;
     }
-
-    // post request to signup
-    dispatch(isLogin(true));
-    navigate("/");
+    
   };
 
   return (
@@ -90,7 +75,7 @@ const Signup = () => {
           </button>
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
-          Already have an account? <a href="/login" className="text-blue-500 hover:underline">Login</a>
+          Already have an account? <Link to='/login' className="text-blue-500 hover:underline">Login</Link>
         </p>
       </div>
     </div>

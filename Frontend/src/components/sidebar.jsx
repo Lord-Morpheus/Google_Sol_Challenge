@@ -3,11 +3,9 @@ import icon from "../assets/icon.svg";
 import sidebar from "../assets/sidebar.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar, toggleSearchbar } from "../redux/actions";
-import { isLogin } from "../redux/actions";
-// import { useNavigate } from "react-router-dom";
+import checkTokenValidity from "../middleware/checkLogin";
 
 const Sidebar = () => {
-  // const [resources, setResources] = useState([]);
   const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publications, setPublications] = useState([]);
@@ -18,7 +16,7 @@ const Sidebar = () => {
 
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.sidebar.isOpen);
-  const isLoggedIn = useSelector((state) => state.login.isLogin);
+  let isLoggedIn = checkTokenValidity();
 
   const handleToggleSidebar = () => {
     dispatch(toggleSidebar());
@@ -40,7 +38,8 @@ const Sidebar = () => {
 
   // const navigate= useNavigate();
   const handleLogout = () => {
-    dispatch(isLogin());
+    localStorage.removeItem("idToken");
+    isLoggedIn = false;
     if(!isLoggedIn){
       window.location.href = "/login";
     }
@@ -502,7 +501,7 @@ const Sidebar = () => {
           />
         </svg>
 
-        <h4 className={`${isOpen ? "" : "hidden"} font-semibold`}>Logout</h4>
+        <h4 className={`${isOpen ? "" : "hidden"} font-semibold`} onClick={handleLogout}>Logout</h4>
       </div>
     </div>
   );

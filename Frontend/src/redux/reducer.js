@@ -1,11 +1,13 @@
 // src/redux/reducer.js
-import { TOGGLE_SIDEBAR, TOGGLE_SEARCHBAR, TOGGLE_MODE, LOGIN_STATE } from "./actions";
+import {
+  TOGGLE_SIDEBAR,
+  TOGGLE_SEARCHBAR,
+  TOGGLE_MODE,
+} from "./actions";
 
 const initialState = {
   isOpen: true,
   isDay: true,
-  isLogin: false,
-  userData: {},
 };
 
 const sidebarReducer = (state = initialState, action) => {
@@ -30,24 +32,41 @@ const sidebarReducer = (state = initialState, action) => {
   }
 };
 
-const loginReducer = (state=initialState, action) => {
-  switch (action.type) {
-    case LOGIN_STATE:
-      if(action.payload===null){
-        return {
-          ...state,
-          isLogin: false,
-          userData: {},
-        }
-      }
-      return {
-        ...state,
-        isLogin: !!action.payload,
-        userData: action.payload || {},
-      }
-    default:
-      return state;
-  }
-};
+// const loginReducer = (state = initialState, action) => {
+//   switch (action.type) {
+//     case LOGIN_STATE:
+//       if (action.payload === null) {
+//         return {
+//           ...state,
+//           isLogin: false,
+//           userData: {},
+//           wishList: [],
+//         };
+//       } else {
+//         // initialState.userData = action.payload||{};
+//         return {
+//           ...state,
+//           isLogin: !!action.payload,
+//           userData: action.payload || {},
+//           wishList: action.payload.wishList || [],
+//         };
+//       }
+//     default:
+//       return state;
+//   }
+// };
 
-export {sidebarReducer,loginReducer};
+// const userWishlist = (state = initialState, action) => {
+//   switch (action.type) {
+//     case UPDATE_WISHLIST:
+//       // initialState.userData = action.payload;
+//       return {
+//         ...state,
+//         wishList: action.payload||[],
+//       };
+//     default:
+//       return state;
+//   }
+// };
+
+export { sidebarReducer };

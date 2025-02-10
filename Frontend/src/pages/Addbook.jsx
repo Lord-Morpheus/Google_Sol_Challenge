@@ -1,6 +1,14 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
+import checkTokenValidity from "../middleware/checkLogin";
+import { useNavigate } from "react-router-dom";
 
 const Addbook = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = checkTokenValidity();
+  if (isLoggedIn === false) {
+    navigate("/login");
+  }
+
   const [book, setBook] = useState({
     bookName: "",
     authorName: "",

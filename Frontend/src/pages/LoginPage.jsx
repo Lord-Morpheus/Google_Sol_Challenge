@@ -1,22 +1,10 @@
-import { useEffect, useState } from "react";
-import {auth, signInWithEmailAndPassword} from '../../firebaseConfig.js';
-import { useDispatch,useSelector } from "react-redux";
-import { isLogin } from "../redux/actions";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { auth, signInWithEmailAndPassword } from "../../firebaseConfig.js";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const isLoggedIn = useSelector((state) => state.login.isLogin);
-  const dispatch = useDispatch();
-  const navigate= useNavigate();
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/");
-    }
-  },[isLoggedIn,navigate]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -28,6 +16,16 @@ const Login = () => {
         return idToken;
       })
       .then((idToken) => {
+        const expiryDate = new Date();
+        expiryDate.setDate(expiryDate.getDate() + 3);
+
+        localStorage.setItem(
+          "idToken",
+          JSON.stringify({
+            token: idToken,
+            expiryDate: expiryDate.toISOString(),
+          })
+        );
         fetch("http://localhost:4000/auth/login", {
           method: "POST",
           headers: {
@@ -37,11 +35,9 @@ const Login = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            dispatch(isLogin(data));
-            // navigate("/");
             console.log(data);
-          })
-          
+            window.location.href = "/";
+          });
       })
       .catch((error) => {
         console.log(error);
@@ -49,7 +45,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 rounded-xl">
+    <div className="flex items-center justify-center min-h-screen bg-[#f6faff] rounded-xl">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
@@ -86,7 +82,7 @@ const Login = () => {
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
           Don&apos;t have an account?{" "}
-          <Link to='/signup' className="text-blue-500 hover:underline">
+          <Link to="/signup" className="text-blue-500 hover:underline">
             signup
           </Link>
         </p>

@@ -44,18 +44,22 @@ const handleAddResource = async (req, res) => {
           expires: '03-17-2025'
         });
 
-        const {userRating,numUserRated,genre,author,...rest}=req.body;
+        const {genre,author,...rest}=req.body;
         const genreArray=genre.split(',').map((item)=>item.trim());
         const authorArray=author.split(',').map((item)=>item.trim());
+        const userRating = 0;
+        const numUserRated = 0;
+        const views = 0;
 
         const data = {
-          userRating: isNaN(Number(userRating))?0:Number(userRating),
-          numUserRated: isNaN(Number(numUserRated))?0:Number(numUserRated),
+          userRating: Number(userRating),
+          numUserRated: Number(numUserRated),
           genre: genreArray,
           author: authorArray,
           imageUrl: imageUrl,
           ...rest,
           fileUrl: url[0],
+          views: Number(0),
           createdAt: new Date().toISOString(),
         };
 
@@ -156,7 +160,6 @@ const handleUpdateResource = async (req, res) => {
         updates.imageUrl = newImageUrlArray[0];
       }
 
-      // Include the rest of the data
       const { createdAt, ...rest } = req.body;
       if (!createdAt) {
         updates.createdAt = new Date().toISOString();

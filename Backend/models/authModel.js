@@ -30,6 +30,7 @@ const signUp = async (data) => {
       books: [],
       progress: [],
       reviews: [],
+      wishlist: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     });

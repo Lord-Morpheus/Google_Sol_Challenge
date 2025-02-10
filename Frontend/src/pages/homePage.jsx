@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import checkTokenValidity from "../middleware/checkLogin";
 
 const HomePage = () => {
   const [resourceData, setResourceData] = useState([]);
@@ -11,18 +12,15 @@ const HomePage = () => {
   const [currentBook, setCurrentBook] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const isOpen=useSelector((state)=>state.sidebar.isOpen);
-  const isLogin=useSelector((state)=>state.login.isLogin);
-  const data=useSelector((state)=>state.login.userData);
-  const userData=data.data;
-  console.log("userData",userData);
-  const navigate=useNavigate();
-  
+  const isOpen = useSelector((state) => state.sidebar.isOpen);
+  const islogin = checkTokenValidity();
+  const navigate = useNavigate();
+
   const itemsPerPage = 8;
   const authorsPerPage = 4;
 
   useEffect(() => {
-    if(isLogin===false){
+    if (islogin === false) {
       navigate("/login");
     }
 
@@ -38,10 +36,10 @@ const HomePage = () => {
         ...new Set(data.map((resource) => resource.author).flat()),
       ];
       setAuthors(authors);
-      console.log(authors);
+      // console.log(authors);
     };
     fetchResources();
-  }, [isLogin,navigate]);
+  }, [islogin, navigate]);
 
   const currentItemsExplore = resourceData.slice(
     currentPageExplore * itemsPerPage,
@@ -68,7 +66,7 @@ const HomePage = () => {
     }
   };
   const handleAuthorsPrevious = () => {
-    console.log("author previous");
+    // console.log("author previous");
     if (currentPageAuthors > 0) {
       setCurrentPageAuthors(currentPageAuthors - 1);
     }
@@ -90,7 +88,7 @@ const HomePage = () => {
     }
   };
   const handleAuthorsNext = () => {
-    console.log("author next");
+    // console.log("author next");
     if ((currentPageAuthors + 1) * authorsPerPage < authors.length) {
       setCurrentPageAuthors(currentPageAuthors + 1);
     }
@@ -101,13 +99,45 @@ const HomePage = () => {
     }
   };
 
+  // const addToWishlist = async (resource) => {
+  //   const updatedData = {
+  //     ...userData,
+  //     wishlist: userData.wishlist.includes(resource.id)
+  //       ? userData.wishlist.filter(id => id !== resource.id) // Remove if exists
+  //       : [...userData.wishlist, resource.id], // Add if doesn't exist
+  //   };    
+  //   // dispatch(isLogin(updatedData));
+  //   // userData=updatedData;
+  //   // updateUserData(updatedData);
+    
+  //   const updatedWishList=updatedData.wishlist;
+
+  //   console.log("updatedData", updatedData);
+  //   await fetch("http://localhost:4000/users/update", {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       id: userData.id,
+  //       wishlist: updatedWishList,
+  //     }),
+  //   })
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     console.log("wishlist updated", data);
+  //   });
+  //   // const res = await response.json();
+  //   // console.log("successfully added ", res.data);
+  //   // console.log("succesfully added wishlist",userData);
+  // };
 
   return (
     <div className="flex bg-[#f6faff]">
-      <div className={`grid grid-rows-3 gap-2 ${isOpen?'w-2/3':'w-5/7'}`}>
+      <div className={`grid grid-rows-3 gap-2 ${isOpen ? "w-2/3" : "w-5/7"}`}>
         <div className="bg-white m-3 rounded-lg row-span-2">
           <div className="flex justify-between items-center p-4">
-            <div className="flex justify-start gap-4 items-center">
+            <div className="flex justify-start gap-4 items-center font-semibold text-[#001B3D]">
               <div className="rounded-3xl bg-[#EBF4FF] px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer">
                 Popular
               </div>
@@ -118,7 +148,7 @@ const HomePage = () => {
                 Top Rated
               </div>
               <div className="rounded-3xl bg-[#EBF4FF] px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer">
-                Following
+                Wishlist
               </div>
             </div>
             <div className="flex gap-4 items-center">
@@ -163,7 +193,37 @@ const HomePage = () => {
               <div>Loading...</div> // Or show a loading spinner here
             ) : (
               currentItemsExplore?.map((resource, index) => (
-                <div className="basis-md" key={index}>
+                <div className="basis-md relative" key={index}>
+                  <div
+                    className="absolute right-2 rounded-full p-1 bg-white flex items-center justify-center cursor-pointer"
+                    // onClick={() => addToWishlist(resource)}
+                  >
+                    {/* {userData?.wishlist.includes(resource.id) ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2.2}
+                        stroke="#FE3F78"
+                        className="size-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="size-6"
+                      >
+                        <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                      </svg>
+                    )} */}
+                  </div>
                   <img
                     className="object-fill h-[80%] w-[90%]"
                     src={resource.imageUrl}
@@ -264,7 +324,7 @@ const HomePage = () => {
           ))}
         </div>
       </div>
-      <div className={`grid grid-rows-3 gap-2 ${isOpen?'w-1/3':'w-2/7'}`}>
+      <div className={`grid grid-rows-3 gap-2 ${isOpen ? "w-1/3" : "w-2/7"}`}>
         <div className="bg-white m-3 rounded-lg flex flex-col row-span-1">
           <div className="flex justify-between items-center">
             <div className="p-4 text-lg font-semibold capitalize text-[#001B3D]">

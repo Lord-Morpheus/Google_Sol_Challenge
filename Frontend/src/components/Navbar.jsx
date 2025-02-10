@@ -1,18 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMode } from "../redux/actions";
+import checkTokenValidity from "../middleware/checkLogin";
 
 const Navbar = () => {
   const isDay = useSelector((state) => state.sidebar.isDay);
-  const isLoggedIn = useSelector((state) => state.login.isLogin);
-  const userData = useSelector((state) => state.login.userData);
+  const isLoggedIn = checkTokenValidity();
   const dispatch = useDispatch();
-  console.log("userData", userData);
+  // console.log("userData");
   const handleMode = () => {
     dispatch(toggleMode());
   };
 
-  const userInitials =
-    Object.keys(userData).length > 0 ? userData.data.name[0] : "";
+  const userInitials ="A";
 
   return (
     <nav className="w-full mt-3 py-2 px-2">
@@ -82,7 +81,7 @@ const Navbar = () => {
                   {userInitials}
                 </span>
                 <p className="text-[#001B3D] capitalize font-semibold">
-                  welcome, {userData.data.name} !
+                  {/* welcome, {userData.data.name} ! */}
                 </p>
               </div>
             ) : (
