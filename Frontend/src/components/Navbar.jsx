@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMode } from "../redux/actions";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const Navbar = () => {
   const isDay = useSelector((state) => state.sidebar.isDay);
@@ -12,13 +10,6 @@ const Navbar = () => {
   const handleMode = () => {
     dispatch(toggleMode());
   };
-
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    }
-  }, [isLoggedIn, navigate]);
 
   const userInitials =
     Object.keys(userData).length > 0 ? userData.data.name[0] : "";

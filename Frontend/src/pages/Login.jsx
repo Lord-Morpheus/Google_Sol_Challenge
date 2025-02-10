@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {auth, signInWithEmailAndPassword} from '../../firebaseConfig.js';
 import { useDispatch,useSelector } from "react-redux";
 import { isLogin } from "../redux/actions";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -86,9 +86,9 @@ const Login = () => {
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
           Don&apos;t have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
-            Sign up
-          </a>
+          <Link to='/signup' className="text-blue-500 hover:underline">
+            signup
+          </Link>
         </p>
       </div>
     </div>

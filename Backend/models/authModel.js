@@ -21,13 +21,15 @@ const signUp = async (data) => {
     const user=await auth.createUser({
       email,
       password,
-      ...rest
     });
     
     const addUser=await Users.doc(user.uid).set({
       role: 'admin',
       email,
       ...rest,
+      books: [],
+      progress: [],
+      reviews: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     });
