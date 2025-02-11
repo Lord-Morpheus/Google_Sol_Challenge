@@ -177,7 +177,7 @@ const HomePage = () => {
           ...userData,
           wishlist: newWishlist,
         });
-        alert("wishlist updated");
+        // alert("wishlist updated");
       } else {
         console.log(
           "An error occurred during adding to wishlist",
@@ -286,12 +286,14 @@ const HomePage = () => {
                     )}
                   </div>
                   <img
-                    className="object-fill h-[80%] w-[90%]"
+                    className="object-fill h-[80%] w-[90%] cursor-pointer"
                     src={resource?.imageUrl}
                     alt="book image"
+                    onClick={() => navigate(`/book/${resource.id}`)}
                   />
                   <div className="p-2">
-                    <p className="text-md font-semibold capitalize truncate text-[#001B3D]">
+                    <p className="text-md font-semibold capitalize truncate text-[#001B3D] cursor-pointer"
+                        onClick={() => navigate(`/book/${resource.id}`)}>
                       {resource?.name}
                     </p>
                     <div className="text-sm truncate text-gray-500">

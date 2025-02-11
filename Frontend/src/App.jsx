@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar.jsx";
 import Login from "./pages/LoginPage.jsx";
 import Signup from "./pages/SignupPage.jsx";
 import Addbook from "./pages/Addbook.jsx";
+import BookPage from "./pages/BookPage.jsx";
 import checkTokenValidity from "./middleware/checkLogin.js";
 import { useEffect, useState } from "react";
 
@@ -36,6 +37,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/addbook" element={<Addbook />} />
+            <Route path="/book/:id" element={<BookPage />} />
           </Routes>
       </div>
       </Router>
