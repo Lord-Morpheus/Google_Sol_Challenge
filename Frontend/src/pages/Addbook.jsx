@@ -60,9 +60,9 @@ const Addbook = () => {
   };
 
   return (
-    <div className="grid place-items-center bg-gray-100 rounded-xl h-full p-5">
+    <div className="grid place-items-center bg-[#f6faff] rounded-xl p-5">
       <h1 className="font-bold text-3xl">Add Book</h1>
-      <form className="flex flex-col p-5" onSubmit={handlesubmit}>
+      <form className="flex flex-col p-5 bg-white rounded-xl" onSubmit={handlesubmit}>
         <div className="flex w-full">
           <input
             type="text"

@@ -4,10 +4,9 @@ import sidebar from "../assets/sidebar.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar, toggleSearchbar } from "../redux/actions";
 import checkTokenValidity from "../middleware/checkLogin";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-  const navigate = useNavigate();
   const [genres, setGenres] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [publications, setPublications] = useState([]);
@@ -19,6 +18,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.sidebar.isOpen);
   let isLoggedIn = checkTokenValidity();
+  const role=JSON.parse(localStorage.getItem("userData")).role;
 
   const handleToggleSidebar = () => {
     dispatch(toggleSidebar());
@@ -158,7 +158,8 @@ const Sidebar = () => {
             Ctrl+K
           </div>
         </div>
-        <div
+        <Link
+          to="/"
           className={`flex items-center ${
             isOpen ? "justify-start" : "justify-center"
           } gap-2 w-[95%] p-1 mt-2 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600`}
@@ -176,7 +177,7 @@ const Sidebar = () => {
             />
           </svg>
           <h4 className={`${isOpen ? "" : "hidden"}`}>Home</h4>
-        </div>
+        </Link>
         <div
           className={`flex items-center ${
             isOpen ? "justify-start" : "justify-center "
@@ -197,9 +198,9 @@ const Sidebar = () => {
           <h4 className={`${isOpen ? "" : "hidden"}`}>Collection</h4>
         </div>
 
-        <div
-          onClick={() => navigate("/addbook")}
-          className={`flex items-center ${
+        <Link
+          to='/addbook'
+          className={`${role==='admin'?"":"hidden"} flex items-center ${
             isOpen ? "justify-start" : "justify-center"
           } gap-2 w-[95%] p-1 mt-2 hover:bg-white hover:rounded-lg hover:cursor-pointer hover:shadow-sm hover:text-blue-600`}
         >
@@ -218,7 +219,7 @@ const Sidebar = () => {
           </svg>
 
           <h4 className={`${isOpen ? "" : "hidden"}`}>Add Book</h4>
-        </div>
+        </Link>
         <div
           className={`flex items-center ${
             isOpen ? "justify-start" : "justify-center"

@@ -13,6 +13,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [userReading, setUserReading] = useState([]);
+  const [choice, setChoice] = useState("popular");
 
   const isOpen = useSelector((state) => state.sidebar.isOpen);
   const islogin = checkTokenValidity();
@@ -70,10 +71,24 @@ const HomePage = () => {
     }
   };
 
-  const currentItemsExplore = resourceData.slice(
-    currentPageExplore * itemsPerPage,
-    (currentPageExplore + 1) * itemsPerPage
-  );
+  const currentItemsExplore = resourceData?.filter((resource) => {
+    if (choice === 'wishlist') {
+      return userData.wishlist.includes(resource.id);
+    }
+    return true;
+  }).sort((a, b) => {
+    if (choice === 'popular') {
+      return b.popularity - a.popularity;
+    }
+    if (choice === 'latest') {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+    if (choice === 'toprated') {
+      return b.userRating - a.userRating;
+    }
+    return 0;
+  });
+  
   const currentItemsRead = userReading.slice(
     currentPageRead * authorsPerPage,
     (currentPageRead + 1) * authorsPerPage
@@ -162,6 +177,7 @@ const HomePage = () => {
           ...userData,
           wishlist: newWishlist,
         });
+        alert("wishlist updated");
       } else {
         console.log(
           "An error occurred during adding to wishlist",
@@ -172,24 +188,27 @@ const HomePage = () => {
       console.log("failed to update wishlist", error);
     }
   };
-
-  console.log("currentBookData", currentBookData);
+  const handleChoice = (choice) => () => {
+    setChoice(choice);
+  };
+  // console.log("choice", choice);
+  // console.log("currentBookData", currentItemsExplore);
   return (
     <div className="flex bg-[#f6faff]">
       <div className={`grid grid-rows-3 gap-2 ${isOpen ? "w-2/3" : "w-5/7"}`}>
         <div className="bg-white m-3 rounded-lg row-span-2">
           <div className="flex justify-between items-center p-4">
-            <div className="flex justify-start gap-4 items-center font-semibold text-[#001B3D]">
-              <div className="rounded-3xl bg-[#EBF4FF] px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer">
+            <div className="flex justify-start gap-4 items-center text-[#001B3D]">
+              <div className={`rounded-3xl ${choice==='popular'?'bg-[#50a2ff] text-white':'bg-[#EBF4FF]'} px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer`} onClick={handleChoice('popular')}>
                 Popular
               </div>
-              <div className="rounded-3xl bg-[#EBF4FF] px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer">
+              <div className={`rounded-3xl ${choice==='latest'?'bg-[#50a2ff] text-white':'bg-[#EBF4FF]'} px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer`} onClick={handleChoice('latest')}>
                 Latest
               </div>
-              <div className="rounded-3xl bg-[#EBF4FF] px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer">
+              <div className={`rounded-3xl ${choice==='toprated'?'bg-[#50a2ff] text-white':'bg-[#EBF4FF]'} px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer`} onClick={handleChoice('toprated')}>
                 Top Rated
               </div>
-              <div className="rounded-3xl bg-[#EBF4FF] px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer">
+              <div className={`rounded-3xl ${choice==='wishlist'?'bg-[#50a2ff] text-white':'bg-[#EBF4FF]'} px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer`} onClick={handleChoice('wishlist')}>
                 Wishlist
               </div>
             </div>
@@ -268,15 +287,15 @@ const HomePage = () => {
                   </div>
                   <img
                     className="object-fill h-[80%] w-[90%]"
-                    src={resource.imageUrl}
+                    src={resource?.imageUrl}
                     alt="book image"
                   />
                   <div className="p-2">
                     <p className="text-md font-semibold capitalize truncate text-[#001B3D]">
-                      {resource.name}
+                      {resource?.name}
                     </p>
                     <div className="text-sm truncate text-gray-500">
-                      {resource.author.join(" & ")}
+                      {resource?.author.join(" & ")}
                     </div>
                   </div>
                 </div>
@@ -339,11 +358,11 @@ const HomePage = () => {
                 <div className="flex items-center gap-4">
                   <img
                     className="h-10 w-10 rounded-full"
-                    src={bookResource.imageUrl}
+                    src={bookResource?.imageUrl}
                     alt="book image"
                   />
                   <div className="text-[#001B3D]">
-                    <p className="text-md capitalize">{bookResource.name}</p>
+                    <p className="text-md capitalize">{bookResource?.name}</p>
                   </div>
                 </div>
                 <div className="p-4 flex items-center gap-2">
@@ -352,7 +371,7 @@ const HomePage = () => {
                       className="h-full bg-[#50a2ff] rounded-full"
                       style={{
                         width: `${
-                          (resource.pagesRead / bookResource.totalPages) * 100
+                          (resource?.pagesRead / bookResource?.totalPages) * 100
                         }%`,
                       }}
                     ></div>
@@ -360,7 +379,7 @@ const HomePage = () => {
                   <div>
                     <p className="text-sm text-gray-500">
                       {(
-                        (resource.pagesRead / bookResource.totalPages) *
+                        (resource?.pagesRead / bookResource?.totalPages) *
                         100
                       ).toFixed(1)}
                       %

@@ -22,17 +22,6 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const idToken = userCredential.user.getIdToken();
-        const userId = userCredential.user.uid;
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + 3);
-        localStorage.setItem(
-          "userData",
-          JSON.stringify({
-            token: idToken,
-            userId: userId,
-            expiryDate: expiryDate.toISOString(),
-          })
-        );
         return idToken;
       })
       .then((idToken) => {
@@ -45,8 +34,20 @@ const Login = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 3);
+            localStorage.setItem(
+              "userData",
+              JSON.stringify({
+                token: idToken,
+                userId: data.data.id,
+                expiryDate: expiryDate,
+                role: data.data.role,
+              })
+            );
+            // console.log(data);
             window.location.href = "/";
+            // navigate('/');
           });
       })
       .catch((error) => {

@@ -8,7 +8,7 @@ const Navbar = () => {
   const isDay = useSelector((state) => state.sidebar.isDay);
   const isLoggedIn = checkTokenValidity();
   const data = JSON.parse(localStorage.getItem("userData"));
-  const userId=data.userId;
+  const userId=data?.userId;
   const dispatch = useDispatch();
   // console.log("userData");
   const handleMode = () => {
@@ -33,7 +33,8 @@ const Navbar = () => {
         console.log("failed to fetch user", error);
       }
     };
-    fetchUserData(userId);
+
+    if(userId!==undefined) fetchUserData(userId);
   }, [userId]);
   // console.log(userData);
   const userInitials = userData!==null ? userData.name[0]  : "";
