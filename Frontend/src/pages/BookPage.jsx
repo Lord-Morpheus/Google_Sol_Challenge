@@ -32,7 +32,7 @@ const BookPage = () => {
   return (
     <div className="book-details">
       <h1>{book.name}</h1>
-      <img src={book.imageUrl} alt={book.name} />
+      <img src={book.imageUrl} alt={book.name} className="w-48 h-72 object-cover" />
       <p>Author: {book.author.join(", ")}</p>
       <p>Genre: {book.genre.join(", ")}</p>
       <p>Language: {book.language}</p>
