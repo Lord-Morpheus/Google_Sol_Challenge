@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import checkTokenValidity from "../middleware/checkLogin";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
+
   const navigate = useNavigate();
   useEffect(() => {
     const loggedIn = checkTokenValidity();
@@ -25,30 +24,12 @@ const Signup = () => {
       return;
     }
 
+    const userData = {
+      name,
+      email,
+      password,
+    };
     try {
-      const userCredential=await createUserWithEmailAndPassword(email, password);
-      const user=userCredential.user;
-      const idToken =user.getIdToken();
-      const userId=user.uid;
-
-      const expiryDate = new Date();
-      expiryDate.setDate(expiryDate.getDate() + 3);
-
-      localStorage.setItem(
-        "userData",
-        JSON.stringify({
-          token: idToken,
-          userId: userId,
-          expiryDate: expiryDate.toISOString(),
-        }),
-      );
-
-      const userData = {
-        name,
-        email,
-        password,
-      };
-
       const response = await fetch("http://localhost:4000/auth/signup", {
         method: "POST",
         headers: {
@@ -56,12 +37,11 @@ const Signup = () => {
         },
         body: JSON.stringify(userData),
       });
-      if(response.status===200){
+      if (response.status === 201) {
         window.location.href = "/login";
-      }else{
+      } else {
         alert("An error occurred during signup");
       }
-      
     } catch (error) {
       console.error("Error during signup", error);
       alert("An error occurred during signup");
@@ -74,7 +54,9 @@ const Signup = () => {
         <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Name
+            </label>
             <input
               type="text"
               placeholder="Enter your name"
@@ -85,7 +67,9 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               placeholder="Enter your email"
@@ -96,7 +80,9 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               placeholder="Enter your password"
@@ -107,7 +93,9 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Confirm Password
+            </label>
             <input
               type="password"
               placeholder="Confirm your password"
@@ -125,7 +113,10 @@ const Signup = () => {
           </button>
         </form>
         <p className="text-center text-sm text-gray-600 mt-4">
-          Already have an account? <Link to='/login' className="text-blue-500 hover:underline">Login</Link>
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-500 hover:underline">
+            Login
+          </Link>
         </p>
       </div>
     </div>

@@ -4,11 +4,11 @@ import checkTokenValidity from "../middleware/checkLogin";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
-  const [userData,setUserData]=useState(null);
+  const [userData, setUserData] = useState(null);
   const isDay = useSelector((state) => state.sidebar.isDay);
   const isLoggedIn = checkTokenValidity();
   const data = JSON.parse(localStorage.getItem("userData"));
-  const userId=data?.userId;
+  const userId = data?.userId;
   const dispatch = useDispatch();
   // console.log("userData");
   const handleMode = () => {
@@ -34,11 +34,10 @@ const Navbar = () => {
       }
     };
 
-    if(userId!==undefined) fetchUserData(userId);
+    if (userId !== undefined) fetchUserData(userId);
   }, [userId]);
-  // console.log(userData);
-  const userInitials = userData!==null ? userData.name[0]  : "";
-  const userName=userData!==null ? userData.name : "";
+  const userInitials = userData !== null ? userData.name[0] : "";
+  const userName = userData !== null ? userData.name : "";
 
   return (
     <nav className="w-full mt-3 py-2 px-2">

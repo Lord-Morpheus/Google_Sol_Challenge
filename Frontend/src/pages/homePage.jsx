@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import checkTokenValidity from "../middleware/checkLogin";
+import Swal from "sweetalert2";
 
 const HomePage = () => {
   const [resourceData, setResourceData] = useState([]);
@@ -178,20 +179,13 @@ const HomePage = () => {
           wishlist: newWishlist,
         });
         // Show wishlist notification
-        const notification = document.createElement("div");
-        notification.innerText = "Wishlist updated";
-        notification.style.position = "fixed";
-        notification.style.bottom = "20px";
-        notification.style.left = "50%";
-        notification.style.transform = "translateX(-50%)";
-        notification.style.backgroundColor = "#50a2ff";
-        notification.style.color = "white";
-        notification.style.padding = "10px 20px";
-        notification.style.borderRadius = "5px";
-        notification.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.1)";
-        document.body.appendChild(notification);
-
-        setTimeout(() => { notification.remove(); }, 2000);
+        Swal.fire({
+          icon: "success",
+          title: "Wishlist updated",
+          showConfirmButton: false,
+          timer: 900,
+        });
+        
       } else {
         console.log(
           "An error occurred during adding to wishlist",
