@@ -9,6 +9,7 @@ import Addbook from "./pages/Addbook.jsx";
 import BookPage from "./pages/BookPage.jsx";
 import checkTokenValidity from "./middleware/checkLogin.js";
 import { useEffect, useState } from "react";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 function App() {
   const isOpen = useSelector((state) => state.sidebar.isOpen);
@@ -36,6 +37,7 @@ function App() {
             <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/addbook" element={<Addbook />} />
             <Route path="/book/:id" element={<BookPage />} />
           </Routes>
