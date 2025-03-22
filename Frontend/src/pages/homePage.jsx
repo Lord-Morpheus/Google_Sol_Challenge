@@ -16,6 +16,7 @@ const HomePage = () => {
   const [userReading, setUserReading] = useState([]);
   const [choice, setChoice] = useState("popular");
 
+  const isDay = useSelector((state) => state.sidebar.isDay);
   const isOpen = useSelector((state) => state.sidebar.isOpen);
   const islogin = checkTokenValidity();
   const navigate = useNavigate();
@@ -202,9 +203,9 @@ const HomePage = () => {
   // console.log("choice", choice);
   // console.log("currentBookData", currentItemsExplore);
   return (
-    <div className="flex bg-[#f6faff]">
+    <div className={`flex ${isDay ? "bg-[#f6faff] text-black" : "bg-gray-900 text-white"}`}>
       <div className={`grid grid-rows-3 gap-2 ${isOpen ? "w-2/3" : "w-5/7"}`}>
-        <div className="bg-white m-3 rounded-lg row-span-2">
+        <div className={`m-3 rounded-lg row-span-2 ${ isDay ? "bg-white" : "bg-gray-800"}`}>
           <div className="flex justify-between items-center p-4">
             <div className="flex justify-start gap-4 items-center text-[#001B3D]">
               <div className={`rounded-3xl ${choice==='popular'?'bg-[#50a2ff] text-white':'bg-[#EBF4FF]'} px-5 py-1 text-center hover:bg-[#C2DDFF] cursor-pointer`} onClick={handleChoice('popular')}>
@@ -300,11 +301,11 @@ const HomePage = () => {
                     onClick={() => navigate(`/book/${resource.id}`)}
                   />
                   <div className="p-2">
-                    <p className="text-md font-semibold capitalize truncate text-[#001B3D] cursor-pointer"
-                        onClick={() => navigate(`/book/${resource.id}`)}>
+                  <p className={`text-md font-semibold capitalize truncate cursor-pointer ${isDay ? 'text-[#001B3D]' : 'text-white'}`}
+                    onClick={() => navigate(`/book/${resource.id}`)}>
                       {resource?.name}
                     </p>
-                    <div className="text-sm truncate text-gray-500">
+                    <div className={`text-sm truncate ${isDay ? 'text-gray-500' : 'text-gray-300'}`}>
                       {resource?.author.join(" & ")}
                     </div>
                   </div>
@@ -313,9 +314,9 @@ const HomePage = () => {
             )}
           </div>
         </div>
-        <div className="bg-white m-3 rounded-lg row-span-1">
+        <div className={`m-3 rounded-lg row-span-1 ${ isDay ? "bg-white" : "bg-gray-800" }`}>
           <div className="flex justify-between items-center">
-            <div className="px-3 py-4 text-lg font-semibold capitalize text-[#001B3D]">
+          <div className={`px-3 py-4 text-lg font-semibold capitalize ${isDay ? 'text-[#001B3D]' : 'text-white'}`}>
               progress
             </div>
             <div className="flex gap-4 items-center p-4">
@@ -402,9 +403,9 @@ const HomePage = () => {
         </div>
       </div>
       <div className={`grid grid-rows-3 gap-2 ${isOpen ? "w-1/3" : "w-2/7"}`}>
-        <div className="bg-white m-3 rounded-lg flex flex-col row-span-1">
+        <div className={`m-3 rounded-lg flex flex-col row-span-1 ${ isDay ? "bg-white" : "bg-gray-800" }`}>
           <div className="flex justify-between items-center">
-            <div className="p-4 text-lg font-semibold capitalize text-[#001B3D]">
+            <div className={`p-4 text-lg font-semibold capitalize ${isDay ? "text-[#001B3D]" : "text-white"}`}>
               Recommended authors
             </div>
             <div className="flex gap-4 items-center p-4">
@@ -455,7 +456,7 @@ const HomePage = () => {
                   .join("");
 
                 return (
-                  <div className="flex items-center gap-4 px-4" key={index}>
+                  <div className={`flex items-center gap-4 px-4 ${isDay ? "text-[#001B3D]" : "text-white"}`} key={index}>
                     <span className="w-10 h-10 flex items-center justify-center bg-[#50a2ff] text-white rounded-full">
                       {authorInitials}
                     </span>
@@ -468,9 +469,9 @@ const HomePage = () => {
             )}
           </div>
         </div>
-        <div className="bg-white m-3 rounded-lg flex flex-col row-span-2">
+        <div className={`m-3 rounded-lg flex flex-col row-span-2 ${ isDay ? "bg-white" : "bg-gray-800" }`}>
           <div className="flex justify-between items-center">
-            <div className="text-lg font-semibold capitalize text-[#001B3D] p-4">
+          <div className={`text-lg font-semibold capitalize p-4 ${isDay ? "text-[#001B3D]" : "text-white"}`}>
               continue reading
             </div>
             <div className="flex gap-4 items-center p-4">
