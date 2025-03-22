@@ -40,7 +40,7 @@ const Navbar = () => {
   const userName = userData !== null ? userData.name : "";
 
   return (
-    <nav className="w-full mt-3 py-2 px-2">
+    <nav className={`w-full py-2 px-2 ${isDay ? 'bg-transparent text-[#001B3D]' : 'bg-gray-900 text-white'}`}>
       <div className="flex justify-between items-center">
         <div className=" text-2xl font-bold">LibBooks</div>
         <div className="flex gap-4 mr-3">

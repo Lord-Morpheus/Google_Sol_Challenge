@@ -17,6 +17,7 @@ const Sidebar = () => {
 
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.sidebar.isOpen);
+  const isDay = useSelector((state) => state.sidebar.isDay);
   let isLoggedIn = checkTokenValidity();
   const role=JSON.parse(localStorage.getItem("userData")).role;
 
@@ -104,7 +105,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between h-screen sticky top-0">
+    <div className={`flex flex-col justify-between h-screen sticky top-0 ${isDay ? 'bg-white text-[#001B3D]' : 'bg-gray-900 text-white'}`}>
       <div
         className={`flex flex-col items-center justify-start py-4 ${
           isOpen ? "grid-cols-2" : "grid-cols-1"

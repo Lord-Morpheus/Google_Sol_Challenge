@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import checkTokenValidity from "../middleware/checkLogin";
+import { useSelector } from "react-redux";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -9,6 +10,8 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
+  const isDay = useSelector((state) => state.sidebar.isDay);
+
   useEffect(() => {
     const loggedIn = checkTokenValidity();
     if (loggedIn) {
@@ -49,12 +52,16 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 rounded-xl">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+    <div className={`flex items-center justify-center min-h-screen rounded-xl ${ isDay ? "bg-gray-100 text-[#001B3D]" : "bg-gray-900 text-white"}`}>
+      <div className={`w-full max-w-md p-8 rounded-lg shadow-lg ${ isDay ? "bg-white text-[#001B3D]" : "bg-gray-800 text-white"}`} >
         <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              className={`block text-sm font-medium ${
+                isDay ? "text-gray-700" : "text-gray-300"
+              }`}
+            >
               Name
             </label>
             <input
@@ -67,7 +74,11 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              className={`block text-sm font-medium ${
+                isDay ? "text-gray-700" : "text-gray-300"
+              }`}
+            >
               Email
             </label>
             <input
@@ -80,7 +91,11 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              className={`block text-sm font-medium ${
+                isDay ? "text-gray-700" : "text-gray-300"
+              }`}
+            >
               Password
             </label>
             <input
@@ -93,7 +108,11 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              className={`block text-sm font-medium ${
+                isDay ? "text-gray-700" : "text-gray-300"
+              }`}
+            >
               Confirm Password
             </label>
             <input
@@ -112,7 +131,11 @@ const Signup = () => {
             Sign Up
           </button>
         </form>
-        <p className="text-center text-sm text-gray-600 mt-4">
+        <p
+          className={`text-center text-sm mt-4 ${
+            isDay ? "text-gray-600" : "text-gray-300"
+          }`}
+        >
           Already have an account?{" "}
           <Link to="/login" className="text-blue-500 hover:underline">
             Login

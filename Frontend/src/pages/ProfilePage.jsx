@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import checkTokenValidity from "../middleware/checkLogin";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+
+  const isDay = useSelector((state) => state.sidebar.isDay);
 
   useEffect(() => {
     const isLoggedIn = checkTokenValidity();
@@ -36,27 +39,27 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f6faff]">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+    <div className={`flex flex-col items-center justify-center min-h-screen ${isDay ? 'bg-[#f6faff] text-[#001B3D]' : 'bg-gray-900 text-white'}`}>
+      <div className={`p-8 rounded-lg shadow-lg w-96 ${isDay ? 'bg-white text-[#001B3D]' : 'bg-gray-800 text-white'}`}>
         <h1 className="text-2xl font-bold mb-4">Profile</h1>
         <div className="mb-4">
-          <p className="text-gray-600">Name:</p>
+          <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Name:</p>
           <p className="text-lg font-semibold">{userData.name}</p>
         </div>
         <div>
-          <p className="text-gray-600">Email:</p>
+          <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Email:</p>
           <p className="text-lg font-semibold">{userData.email}</p>
         </div>
         <div>
-          <p className="text-gray-600">Books:</p>
+          <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Books Issued:</p>
           <p className="text-lg font-semibold">{userData.books.length} books</p>
         </div>
         <div>
-          <p className="text-gray-600">Wishlist:</p>
+          <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Wishlist:</p>
           <p className="text-lg font-semibold">{userData.wishlist.length} items</p>
         </div>
         <div>
-          <p className="text-gray-600">Account Created:</p>
+          <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Account Created:</p>
           <p className="text-lg font-semibold">{new Date(userData.createdAt).toLocaleDateString()}</p>
         </div>
       </div>

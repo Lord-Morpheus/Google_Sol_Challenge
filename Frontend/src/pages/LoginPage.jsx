@@ -1,20 +1,19 @@
 import { useState } from "react";
 import { auth, signInWithEmailAndPassword } from "../../firebaseConfig.js";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const isDay = useSelector((state) => state.sidebar.isDay);
 
   const handleLogin = (e) => {
     e.preventDefault();
     console.log(e);
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const idToken = userCredential.user.getIdToken();
-        return idToken;
-      })
+      .then((userCredential) => userCredential.user.getIdToken())
       .then((idToken) => {
         fetch("http://localhost:4000/auth/login", {
           method: "POST",
@@ -36,9 +35,7 @@ const Login = () => {
                 role: data.data.role,
               })
             );
-            // console.log(data);
             window.location.href = "/";
-            // navigate('/');
           });
       })
       .catch((error) => {
@@ -47,12 +44,24 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#f6faff] rounded-xl">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+    <div
+      className={`flex items-center justify-center min-h-screen rounded-xl ${
+        isDay ? "bg-[#f6faff] text-[#001B3D]" : "bg-gray-900 text-white"
+      }`}
+    >
+      <div
+        className={`w-full max-w-md p-8 rounded-lg shadow-lg ${
+          isDay ? "bg-white text-[#001B3D]" : "bg-gray-800 text-white"
+        }`}
+      >
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              className={`block text-sm font-medium ${
+                isDay ? "text-gray-700" : "text-gray-300"
+              }`}
+            >
               Email
             </label>
             <input
@@ -64,7 +73,11 @@ const Login = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              className={`block text-sm font-medium ${
+                isDay ? "text-gray-700" : "text-gray-300"
+              }`}
+            >
               Password
             </label>
             <input
@@ -82,10 +95,14 @@ const Login = () => {
             Login
           </button>
         </form>
-        <p className="text-center text-sm text-gray-600 mt-4">
+        <p
+          className={`text-center text-sm mt-4 ${
+            isDay ? "text-gray-600" : "text-gray-300"
+          }`}
+        >
           Don&apos;t have an account?{" "}
           <Link to="/signup" className="text-blue-500 hover:underline">
-            signup
+            Signup
           </Link>
         </p>
       </div>
