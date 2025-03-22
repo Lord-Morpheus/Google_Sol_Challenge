@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleMode } from "../redux/actions";
 import checkTokenValidity from "../middleware/checkLogin";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [userData, setUserData] = useState(null);
@@ -9,6 +10,9 @@ const Navbar = () => {
   const isLoggedIn = checkTokenValidity();
   const data = JSON.parse(localStorage.getItem("userData"));
   const userId = data?.userId;
+
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   // console.log("userData");
   const handleMode = () => {
@@ -102,7 +106,8 @@ const Navbar = () => {
              active:scale-90"
           >
             {isLoggedIn ? (
-              <div className="flex items-center justify-center gap-1">
+              <div onClick={() => navigate('/profile')}
+                className="flex items-center justify-center gap-1">
                 <span className="flex items-center justify-center bg-[#50a2ff] text-white rounded-full size-6 capitalize">
                   {userInitials}
                 </span>
