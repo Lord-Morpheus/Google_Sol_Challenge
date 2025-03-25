@@ -42,23 +42,23 @@ const ProfilePage = () => {
     <div className={`flex flex-col items-center justify-center min-h-screen ${isDay ? 'bg-[#f6faff] text-[#001B3D]' : 'bg-gray-900 text-white'}`}>
       <div className={`p-8 rounded-lg shadow-lg w-96 ${isDay ? 'bg-white text-[#001B3D]' : 'bg-gray-800 text-white'}`}>
         <h1 className="text-2xl font-bold mb-4">Profile</h1>
-        <div className="mb-4">
+        <div className="mb-4 flex items-center gap-4 capitalize">
           <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Name:</p>
           <p className="text-lg font-semibold">{userData.name}</p>
         </div>
-        <div>
+        <div className="mb-4 flex items-center gap-4 capitalize">
           <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Email:</p>
           <p className="text-lg font-semibold">{userData.email}</p>
         </div>
-        <div>
+        <div className="mb-4 flex items-center gap-4 capitalize">
           <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Books Issued:</p>
-          <p className="text-lg font-semibold">{userData.books.length} books</p>
+          <p className="text-lg font-semibold">{userData.progress.length} books</p>
         </div>
-        <div>
+        <div className="mb-4 flex items-center gap-4 capitalize"> 
           <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Wishlist:</p>
           <p className="text-lg font-semibold">{userData.wishlist.length} items</p>
         </div>
-        <div>
+        <div className="mb-4 flex items-center gap-4 capitalize">
           <p className={`${isDay ? 'text-gray-600' : 'text-gray-300'}`}>Account Created:</p>
           <p className="text-lg font-semibold">{new Date(userData.createdAt).toLocaleDateString()}</p>
         </div>

@@ -34,14 +34,14 @@ const handleAddResource = async (req, res) => {
           });
           imageUrlArray = await imageUpload.getSignedUrl({
             action: 'read',
-            expires: '03-17-2025'
+            
           });
           imageUrl = imageUrlArray[0];
         }
 
         const url = await fileUpload.getSignedUrl({
           action: 'read',
-          expires: '03-17-2025'
+          
         });
 
         const {genre,author,...rest}=req.body;
@@ -128,7 +128,7 @@ const handleUpdateResource = async (req, res) => {
 
         const newFileUrl = await fileUpload.getSignedUrl({
           action: 'read',
-          expires: '03-17-2025'
+          
         });
 
         updates.fileUrl = newFileUrl[0];
@@ -154,7 +154,7 @@ const handleUpdateResource = async (req, res) => {
 
         let newImageUrlArray = await imageUpload.getSignedUrl({
           action: 'read',
-          expires: '03-17-2025'
+          
         });
 
         updates.imageUrl = newImageUrlArray[0];
