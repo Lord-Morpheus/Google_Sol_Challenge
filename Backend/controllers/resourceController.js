@@ -10,7 +10,7 @@ const handleAddResource = async (req, res) => {
     // Handle file upload with multer
     upload.array('files',2)(req, res, async (err) => {
       if (err) {
-        return res.status(400).json({ msg: 'Failed to upload file1', details: err.message });
+        return res.status(400).json({ msg: 'Failed to upload file12', details: err.message });
       }
 
       const files = req.files;
@@ -34,14 +34,14 @@ const handleAddResource = async (req, res) => {
           });
           imageUrlArray = await imageUpload.getSignedUrl({
             action: 'read',
-            
+            expires: '03-01-2500'
           });
           imageUrl = imageUrlArray[0];
         }
 
         const url = await fileUpload.getSignedUrl({
           action: 'read',
-          
+          expires: '03-01-2500'
         });
 
         const {genre,author,...rest}=req.body;
@@ -66,11 +66,11 @@ const handleAddResource = async (req, res) => {
         const response = await addResource(data);
         res.status(response.status).json(response);
       } else {
-        res.status(400).json({ msg: 'Failed to upload file' });
+        res.status(400).json({ msg: 'Failed to upload file'});
       }
     });
   } catch (error) {
-    res.status(400).json({ msg: 'Failed to upload file', details: error.message });
+    res.status(400).json({ msg: 'Failed to upload file111', details: error.message });
   }
 };
 
@@ -128,7 +128,7 @@ const handleUpdateResource = async (req, res) => {
 
         const newFileUrl = await fileUpload.getSignedUrl({
           action: 'read',
-          
+          expires: '03-01-2500'
         });
 
         updates.fileUrl = newFileUrl[0];
@@ -154,7 +154,7 @@ const handleUpdateResource = async (req, res) => {
 
         let newImageUrlArray = await imageUpload.getSignedUrl({
           action: 'read',
-          
+          expires: '03-01-2500'
         });
 
         updates.imageUrl = newImageUrlArray[0];
